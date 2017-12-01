@@ -9,30 +9,25 @@ public class Table{
     tiles = new ArrayList<OTile>();
 
   }
+
+  /**
+    *
+    *
+    */
   public void init(ArrayList<OTile> tiles){
     for(int j = 0; j < 4; j++){
       for(int i = 1; i < 10; i++){
         tiles.add(new OTile(i, 's'));
-        OTile m = new OTile(i, 'm');
-        OTile p = new OTile(i, 'p');
-        tiles.add(s);
-        tiles.add(m);
-        tiles.add(p);
+        tiles.add(new OTile(i, 'm'));
+        tiles.add(new OTile(i, 'p'));
       }
-      OTile N = new OTile(0, 'N');
-      OTile S = new OTile(0, 'S');
-      OTile W = new OTile(0, 'W');
-      OTile E = new OTile(0, 'E');
-      OTile r = new OTile(0, 'r');
-      OTile w = new OTile(0, 'w');
-      OTile g = new OTile(0, 'g');
-      tiles.add(N);
-      tiles.add(S);
-      tiles.add(W);
-      tiles.add(E);
-      tiles.add(r);
-      tiles.add(w);
-      tiles.add(g);
+      tiles.add(new OTile(0, 'N'));
+      tiles.add(new OTile(0, 'S'));
+      tiles.add(new OTile(0, 'W'));
+      tiles.add(new OTile(0, 'E'));
+      tiles.add(new OTile(0, 'r'));
+      tiles.add(new OTile(0, 'w'));
+      tiles.add(new OTile(0, 'g'));
     }
   }
 
