@@ -100,7 +100,7 @@ public class Table{
     return doraHyouji;
   }
 
-
+/*
   public static void main(String[] args){ //To see if table is working.
     ArrayList<Hai> tilesMain = new ArrayList<Hai>();
     Stack<Hai> mountain = new Stack<Hai>();
@@ -110,4 +110,5 @@ public class Table{
       System.out.print(" " + t.mountain.pop() + " ");
     }
   }
+  */
 }
