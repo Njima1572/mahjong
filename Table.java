@@ -5,7 +5,7 @@ public class Table{
   public ArrayList<Hai> tiles;
   public Stack<Hai> mountain; //mountain should be stack so we can just use a destructive .pop() to tsumo a Hai
   public Stack<Hai> wanpai;
-  // private Player[] players;
+  private Player[] players;
   public Hai doraHyouji;
 
   public Table(){
@@ -48,7 +48,7 @@ public class Table{
     int left = countLeft(mountain);
     System.out.println(left);
 
-    // deal();
+    deal();
 
     doraHyouji = dora(wanpai);
     System.out.println(doraHyouji);
