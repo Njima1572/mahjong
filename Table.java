@@ -5,7 +5,8 @@ public class Table{
   public ArrayList<Hai> tiles;
   public Stack<Hai> mountain; //mountain should be stack so we can just use a destructive .pop() to tsumo a Hai
   public Stack<Hai> wanpai;
-  private Player[] players;
+  // private Player[] players;
+  public Hai doraHyouji;
 
   public Table(){
     tiles = new ArrayList<Hai>();
@@ -47,13 +48,16 @@ public class Table{
     int left = countLeft(mountain);
     System.out.println(left);
 
-    deal();
+    // deal();
+
+    doraHyouji = dora(wanpai);
+    System.out.println(doraHyouji);
 
   }
 
   public Stack<Hai> makeMountain(ArrayList<Hai> tiles){
     Stack<Hai> mountain = new Stack<Hai>();
-    //Collections.shuffle(tiles);
+    Collections.shuffle(tiles);
     for(int i = 0; i < tiles.size(); i++){
       mountain.push(tiles.get(i));
     }
@@ -67,16 +71,16 @@ public class Table{
     }
     return wanpai;
   }
-
-  private void deal(Player[] players){
-    players = new Player[4];
-    for(int j = 0; j < 4; j++){
-      for(int i = 0; i < 13; i++){
-        players[j].tehai[i] = this.mountain.pop();
-      }
-    }
-    this.players = players;
-  }
+  //
+  // private void deal(Player[] players){
+  //   players = new Player[4];
+  //   for(int j = 0; j < 4; j++){
+  //     for(int i = 0; i < 13; i++){
+  //       players[j].tehai[i] = this.mountain.pop();
+  //     }
+  //   }
+  //   this.players = players;
+  // }
 
   private int countLeft(Stack<Hai> mountain){
     int counter = 0;
@@ -88,6 +92,12 @@ public class Table{
     mountain = temp;
 
     return counter;
+  }
+
+  public Hai dora(Stack<Hai> wanpai){
+    Hai doraHyouji;
+    doraHyouji = wanpai.pop();
+    return doraHyouji;
   }
 
 
