@@ -8,7 +8,8 @@ public class Table{
   private Player[] players;
   public Hai doraHyouji;
 
-  public Table(){
+  public Table(Player[] p){
+    players = p;
     tiles = new ArrayList<Hai>();
   }
 
@@ -24,11 +25,11 @@ public class Table{
         tiles.add(new Hai(i, "manzu"));//Manzu
         tiles.add(new Hai(i, "pinzu"));//Pinzu
       }
-
       /** 0 - kaze = East
         * 1 - kaze = South
         * 2 - kaze = West
         * 3 - kaze = North
+
         * 0 - sangen = White
         * 1 - sangen = Green
         * 2 - sangen = Red
@@ -45,10 +46,10 @@ public class Table{
 
     wanpai = this.makeWanpai(mountain);
 
-    int left = countLeft(mountain);
-    System.out.println(left);
+    // int left = countLeft(mountain);
+    // System.out.println(left);
 
-    deal(players);//deal to this list of players
+    deal(players, mountain);//deal to this list of players
 
     doraHyouji = dora(wanpai);
     System.out.println(doraHyouji);
@@ -72,11 +73,10 @@ public class Table{
     return wanpai;
   }
 
-  private void deal(Player[] players){
-    players = new Player[4];
+  private void deal(Player[] dealplayers, Stack<Hai> mountain){
     for(int j = 0; j < 4; j++){
       for(int i = 0; i < 13; i++){
-        players[j].tehai[i] = this.mountain.pop();
+        dealplayers[j].tehai[i] = mountain.pop();
       }
     }
   }
@@ -100,13 +100,13 @@ public class Table{
   }
 
 
-  public static void main(String[] args){ //To see if table is working.
-    ArrayList<Hai> tilesMain = new ArrayList<Hai>();
-    Stack<Hai> mountain = new Stack<Hai>();
-    Table t = new Table();
-    t.init();
-    while(!t.mountain.empty()){
-      System.out.print(" " + t.mountain.pop() + " ");
-    }
-  }
+//   public static void main(String[] args){ //To see if table is working.
+//     ArrayList<Hai> tilesMain = new ArrayList<Hai>();
+//     Stack<Hai> mountain = new Stack<Hai>();
+//     Table t = new Table();
+//     t.init();
+//     while(!t.mountain.empty()){
+//       System.out.print(" " + t.mountain.pop() + " ");
+//     }
+//   }
 }
