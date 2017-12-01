@@ -79,6 +79,15 @@ public class Player{
         }
       }
     }
+    int tehaiIndexCount=0;
+    for(int i=0; i<5; i++)
+    {
+      for(int j=1; j<splitTehai.get(i).size(); j++)
+      {
+        tehai[tehaiIndexCount+j]=splitTehai.get(i).get(j);
+        tehaiIndexCount++;
+      }
+    }
   } //riipai()
 
   public void naki()
