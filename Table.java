@@ -19,9 +19,9 @@ public class Table{
     ArrayList<Hai> tiles = new ArrayList<Hai>();
     for(int j = 0; j < 4; j++){
       for(int i = 1; i < 10; i++){
-        tiles.add(new Hai(i, "souzu"));//索子
-        tiles.add(new Hai(i, "manzu"));//萬子
-        tiles.add(new Hai(i, "pinzu"));//筒子
+        tiles.add(new Hai(i, "souzu"));//Souzu
+        tiles.add(new Hai(i, "manzu"));//Manzu
+        tiles.add(new Hai(i, "pinzu"));//Pinzu
       }
 
       /** 0 - kaze = East
