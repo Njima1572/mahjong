@@ -10,7 +10,6 @@ public class Table{
 
   public Table(){
     tiles = new ArrayList<Hai>();
-    players = new Player[4];
   }
 
   /**
@@ -49,7 +48,7 @@ public class Table{
     int left = countLeft(mountain);
     System.out.println(left);
 
-    deal(players);
+    deal(players);//deal to this list of players
 
     doraHyouji = dora(wanpai);
     System.out.println(doraHyouji);
@@ -80,7 +79,6 @@ public class Table{
         players[j].tehai[i] = this.mountain.pop();
       }
     }
-    this.players = players;
   }
 
   private int countLeft(Stack<Hai> mountain){
