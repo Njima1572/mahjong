@@ -10,6 +10,7 @@ public class Table{
 
   public Table(){
     tiles = new ArrayList<Hai>();
+    players = new Player[4];
   }
 
   /**
@@ -48,7 +49,7 @@ public class Table{
     int left = countLeft(mountain);
     System.out.println(left);
 
-    deal();
+    deal(players);
 
     doraHyouji = dora(wanpai);
     System.out.println(doraHyouji);
@@ -71,16 +72,16 @@ public class Table{
     }
     return wanpai;
   }
-  //
-  // private void deal(Player[] players){
-  //   players = new Player[4];
-  //   for(int j = 0; j < 4; j++){
-  //     for(int i = 0; i < 13; i++){
-  //       players[j].tehai[i] = this.mountain.pop();
-  //     }
-  //   }
-  //   this.players = players;
-  // }
+
+  private void deal(Player[] players){
+    players = new Player[4];
+    for(int j = 0; j < 4; j++){
+      for(int i = 0; i < 13; i++){
+        players[j].tehai[i] = this.mountain.pop();
+      }
+    }
+    this.players = players;
+  }
 
   private int countLeft(Stack<Hai> mountain){
     int counter = 0;
