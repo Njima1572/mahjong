@@ -20,6 +20,10 @@ public class Game{
 	public static void main(String[] args)
 	{
 		Game game = new Game(1);
+		for(int i=0; i<game.players[0].tehai.length; i++)
+		{
+			System.out.println(game.players[0].tehai[i].toString());
+		}
 
 	}
 }
