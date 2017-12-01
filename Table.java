@@ -4,7 +4,7 @@ import java.util.ArrayList;
 public class Table{
 
   ArrayList<OTile> tiles;
-  ArrayList<OTile> mountain;
+  ArrayList<OTile> mountain; //mountain should be stack so we can just use a destructive .pop() to tsumo a tile
   public Table(){
     tiles = new ArrayList<OTile>();
 
@@ -12,7 +12,7 @@ public class Table{
   public void init(ArrayList<OTile> tiles){
     for(int j = 0; j < 4; j++){
       for(int i = 1; i < 10; i++){
-        OTile s = new OTile(i, 's');
+        tiles.add(new OTile(i, 's'));
         OTile m = new OTile(i, 'm');
         OTile p = new OTile(i, 'p');
         tiles.add(s);
