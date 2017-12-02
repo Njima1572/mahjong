@@ -31,6 +31,7 @@ public class Game{
 		{
 			System.out.println(game.players[0].tehai[i].toString());
 		}
+		System.out.println(game.players[0].getShanten());
 
 	}
 }
