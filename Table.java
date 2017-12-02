@@ -7,6 +7,7 @@ public class Table{
   public Stack<Hai> wanpai;
   private Player[] players;
   public Hai doraHyouji;
+  public Hai justDiscarded;
 
   public Table(Player[] p){
     players = p;
@@ -17,7 +18,7 @@ public class Table{
     *
     *@param tiles - all 136 tiles stored in here.
     */
-  public void init(){
+  public void init(boolean isDesiredTehai){
     ArrayList<Hai> tiles = new ArrayList<Hai>();
     for(int j = 0; j < 4; j++){
       for(int i = 1; i < 10; i++){
@@ -50,7 +51,16 @@ public class Table{
     // System.out.println(left);
 
     deal(players, mountain);//deal to this list of players
-
+    if(isDesiredTehai){
+      for(int i = 0; i < 4; i++){
+        for(int j = 0; j < 3; j++){
+          Hai desired = new Hai(i, "manzu");
+          playes[0].tehai[i * 4 + j] = desired;
+        }
+      }
+      Hai desired2 = new Hai(5, "manzu");
+      players[0].tehai[13] = desired2;
+    }
     doraHyouji = dora(wanpai);
     System.out.println(doraHyouji);
 
