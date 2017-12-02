@@ -1,6 +1,6 @@
 import java.util.*;
 public class Player{
-  int jikaze;
+  public char jikaze;
   Hai[] tehai = new Hai[14];
   Table t;
   Hai[] sutehai = new Hai[30];
@@ -28,7 +28,8 @@ public class Player{
     s.close();
     riipai();
   }
-  private void riipai()
+  
+  public void riipai()
   {
     ArrayList<ArrayList<Hai>> splitTehai = new ArrayList<ArrayList<Hai>>(); //in the order of souzu, manzu, pinzu, kaze, sangen
     for(int i=0; i<5; i++)
@@ -36,7 +37,7 @@ public class Player{
       splitTehai.add(new ArrayList<Hai>());
     }
 
-    for(int i=0; i<14; i++)
+    for(int i=0; i<13; i++)
     {
       switch(tehai[i].getType())
       {
@@ -57,36 +58,35 @@ public class Player{
           break;
       }
     }
+
     for(int i=0; i<5; i++)
     {
       boolean isSorted=false;
-      int swapCount=0;
-      while(isSorted)
+      while(!isSorted)
       {
+        isSorted=true;
         for(int j=1; j<splitTehai.get(i).size(); j++)
         {
-          if(splitTehai.get(i).get(j).getNumber()>splitTehai.get(i).get(j-1).getNumber())
+          if(splitTehai.get(i).get(j).getNumber()<splitTehai.get(i).get(j-1).getNumber())
           {
             Hai temp=splitTehai.get(i).get(j);
             splitTehai.get(i).set(j,splitTehai.get(i).get(j-1));
-            splitTehai.get(i).set(j-1,splitTehai.get(i).get(j));
-            swapCount++;
+            splitTehai.get(i).set(j-1,temp);
+            isSorted=false;
           }
-        }
-        if(swapCount==0)
-        {
-          isSorted=true;
         }
       }
     }
+
     int tehaiIndexCount=0;
     for(int i=0; i<5; i++)
     {
-      for(int j=1; j<splitTehai.get(i).size(); j++)
+      for(int j=0; j<splitTehai.get(i).size(); j++)
       {
         tehai[tehaiIndexCount+j]=splitTehai.get(i).get(j);
-        tehaiIndexCount++;
+
       }
+      tehaiIndexCount=tehaiIndexCount+splitTehai.get(i).size();
     }
   } //riipai()
 
