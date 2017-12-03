@@ -52,14 +52,33 @@ public class Table{
 
     deal(players, mountain);//deal to this list of players
     if(isDesiredTehai){
+      //worst case tehai
+
+
       for(int i = 0; i < 4; i++){
         for(int j = 0; j < 3; j++){
-          Hai desired = new Hai(i, "manzu");
+          Hai desired = new Hai(i+1, "manzu");
           players[0].tehai[i * 3 + j] = desired;
         }
       }
       Hai desired2 = new Hai(5, "manzu");
       players[0].tehai[13] = desired2;
+
+
+      /*
+      players[0].tehai[0] = new Hai(1, "manzu");
+      players[0].tehai[1] = new Hai(1, "manzu");
+      players[0].tehai[2] = new Hai(1, "manzu");
+      players[0].tehai[3] = new Hai(3, "manzu");
+      players[0].tehai[4] = new Hai(3, "manzu");
+      players[0].tehai[5] = new Hai(3, "manzu");
+      players[0].tehai[6] = new Hai(2, "souzu");
+      players[0].tehai[7] = new Hai(2, "souzu");
+      players[0].tehai[8] = new Hai(2, "souzu");
+      players[0].tehai[9] = new Hai(2, "kaze");
+      players[0].tehai[10] = new Hai(2, "kaze");
+      players[0].tehai[11] = new Hai(0, "kaze");
+      */
     }
     doraHyouji = dora(wanpai);
     //System.out.println(doraHyouji);

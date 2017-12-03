@@ -90,9 +90,9 @@ public class Player{
     }
 
 
-    //System.out.println("--------------------");
+    System.out.println("--------------------");
     minShantensuu(splitTehai);
-    //System.out.println("--------------------");
+    System.out.println("--------------------");
 
   } //riipai()
 
@@ -139,8 +139,10 @@ public class Player{
         boolean isHaiPartOfKootsu=false;
         int kootsuCheckLoopCounter=1;
         ArrayList<ArrayList<Integer>> listOfPossibleKootsuIndexes = new ArrayList<ArrayList<Integer>>();
+        //System.out.println("j: "+j+"size: "+(rootNode[i].children.get(j).haiCollection.size()-1));
         while(kootsuCheckLoopCounter<rootNode[i].children.get(j).haiCollection.size()-1)
         {
+          isHaiPartOfKootsu=false;
           //if the hai now is the same as both before and after it's a kootsu so
           if(rootNode[i].children.get(j).haiCollection.get(kootsuCheckLoopCounter).getNumber()==rootNode[i].children.get(j).haiCollection.get(kootsuCheckLoopCounter-1).getNumber())
           {
@@ -151,74 +153,169 @@ public class Player{
               kootsuIndexes.add(kootsuCheckLoopCounter);
               kootsuIndexes.add(kootsuCheckLoopCounter+1);
               listOfPossibleKootsuIndexes.add(kootsuIndexes);
+              //System.out.println("this kootsu indexes got added to list of PossibleKootsuIndexes: ");
+              //System.out.println(kootsuIndexes);
               isHaiPartOfKootsu=true;
             }
           }
           if(isHaiPartOfKootsu)
           {
-            kootsuCheckLoopCounter+=3; //add 3 to the counter to move onto the next kootsu
+            //System.out.println("plus 3");
+            kootsuCheckLoopCounter=kootsuCheckLoopCounter+3; //add 3 to the counter to move onto the next kootsu
           }
           else
           {
+            //System.out.println("just plus 1");
             kootsuCheckLoopCounter++; //only add 1 because this hai wasn't part of a kootsu but the next one might be
           }
         }
-        ArrayList<ArrayList<Integer>> allKootsuCombinationsIndexes = new ArrayList<ArrayList<Integer>>();
+        ArrayList<Integer> allKootsuCombinationsIndexes = new ArrayList<Integer>();
         for(int k=0; k<listOfPossibleKootsuIndexes.size(); k++)
         {
           for(int x=k; x<listOfPossibleKootsuIndexes.size(); x++)
           {
 
-            for(int l=k; l<x; l++)
+            for(int l=k; l<=x; l++)
             {
-              allKootsuCombinationsIndexes.add(listOfPossibleKootsuIndexes.get(l));
+              for(int m=0; m<listOfPossibleKootsuIndexes.get(l).size(); m++)
+              {
+                allKootsuCombinationsIndexes.add(listOfPossibleKootsuIndexes.get(l).get(m));
+              }
+              //System.out.println("this kootsu indexes got added: ");
+              //System.out.println(listOfPossibleKootsuIndexes.get(l));
+
             }
           }
         }
         ArrayList<Hai> allHaisWithoutChosenKootsuCombinations = new ArrayList<Hai>();
-        for(int m=0; m<allKootsuCombinationsIndexes.size(); m++)
+        for(int l=0; l<rootNode[i].children.get(j).haiCollection.size(); l++)
         {
-          for(int l=0; l<rootNode[i].children.get(j).haiCollection.size(); l++)
+          boolean isTileAvailable=true;
+          for(int m=0; m<allKootsuCombinationsIndexes.size(); m++)
           {
-            for(int n=0; n<allKootsuCombinationsIndexes.get(m).size(); n++)
+            if(l==allKootsuCombinationsIndexes.get(m))
             {
-              if(l!=allKootsuCombinationsIndexes.get(m).get(n))
+              isTileAvailable=false;
+            }
+          }
+          if(isTileAvailable)
+          {
+            allHaisWithoutChosenKootsuCombinations.add(rootNode[i].children.get(j).haiCollection.get(l));
+            //System.out.println("this hai was added to the all hais without kootsu combo list"+rootNode[i].children.get(j).haiCollection.get(l));
+          }
+        }
+        rootNode[i].children.get(j).addChild(new RiipaiPatternsTreeNode(allHaisWithoutChosenKootsuCombinations));
+        rootNode[i].children.get(j).addChild(new RiipaiPatternsTreeNode(splitHais.get(i))); //add a branch in kootsu level/second level of the tree for a pattern where there's no kootsu
+
+        //for each possible combinations of kootsu's, add all possible shuntsu patterns into next level of the tree which is rootNode.children.get(n).children.get(n).children
+        for(int k=0; k<rootNode[i].children.get(j).children.size(); k++)
+        {
+          if(rootNode[i].children.get(j).children.get(k)!=null)
+          {
+            rootNode[i].children.get(j).children.get(k).InverseShantensuu+=2; //add 1 to InverseShantensuu to this TreeNode because it has an atama
+            rootNode[i].children.get(j).children.get(k).numberOfKootsu=allKootsuCombinationsIndexes.size()/3;
+          }
+
+          boolean isHaiPartOfShuntsu=false;
+          int shuntsuCheckLoopCounter=1;
+          ArrayList<ArrayList<Integer>> listOfPossibleShuntsuIndexes = new ArrayList<ArrayList<Integer>>();
+          //System.out.println("j: "+j+"size: "+(rootNode[i].children.get(j).haiCollection.size()-1));
+          while(shuntsuCheckLoopCounter<rootNode[i].children.get(j).children.get(k).haiCollection.size()-1)
+          {
+            isHaiPartOfShuntsu=false;
+            //if the hai now is +1 of before and -1 of next its a shuntsu so
+            if(rootNode[i].children.get(j).children.get(k).haiCollection.get(shuntsuCheckLoopCounter).getNumber()==rootNode[i].children.get(j).children.get(k).haiCollection.get(shuntsuCheckLoopCounter-1).getNumber()+1)
+            {
+              if(rootNode[i].children.get(j).children.get(k).haiCollection.get(shuntsuCheckLoopCounter).getNumber()==rootNode[i].children.get(j).children.get(k).haiCollection.get(shuntsuCheckLoopCounter+1).getNumber()-1)
               {
-                allHaisWithoutChosenKootsuCombinations.add(rootNode[i].children.get(j).haiCollection.get(l));
+                ArrayList<Integer> shuntsuIndexes = new ArrayList<Integer>();
+                shuntsuIndexes.add(shuntsuCheckLoopCounter-1);
+                shuntsuIndexes.add(shuntsuCheckLoopCounter);
+                shuntsuIndexes.add(shuntsuCheckLoopCounter+1);
+                listOfPossibleShuntsuIndexes.add(shuntsuIndexes);
+                //System.out.println("this kootsu indexes got added to list of PossibleKootsuIndexes: ");
+                //System.out.println(kootsuIndexes);
+                isHaiPartOfShuntsu=true;
+              }
+            }
+            if(isHaiPartOfShuntsu)
+            {
+              //System.out.println("plus 3");
+              shuntsuCheckLoopCounter=shuntsuCheckLoopCounter+3; //add 3 to the counter to move onto the next kootsu
+            }
+            else
+            {
+              //System.out.println("just plus 1");
+              shuntsuCheckLoopCounter++; //only add 1 because this hai wasn't part of a kootsu but the next one might be
+            }
+          }
+
+          ArrayList<Integer> allShuntsuCombinationsIndexes = new ArrayList<Integer>();
+          for(int n=0; n<listOfPossibleShuntsuIndexes.size(); n++)
+          {
+            for(int x=n; x<listOfPossibleShuntsuIndexes.size(); x++)
+            {
+
+              for(int l=n; l<=x; l++)
+              {
+                for(int m=0; m<listOfPossibleShuntsuIndexes.get(l).size(); m++)
+                {
+                  allShuntsuCombinationsIndexes.add(listOfPossibleShuntsuIndexes.get(l).get(m));
+                }
+                //System.out.println("this kootsu indexes got added: ");
+                //System.out.println(listOfPossibleKootsuIndexes.get(l));
+
               }
             }
           }
-          rootNode[i].children.get(j).addChild(new RiipaiPatternsTreeNode(allHaisWithoutChosenKootsuCombinations));
+
+          ArrayList<Hai> allHaisWithoutChosenShuntsuCombinations = new ArrayList<Hai>();
+          for(int l=0; l<rootNode[i].children.get(j).children.get(k).haiCollection.size(); l++)
+          {
+            boolean isTileAvailable=true;
+            for(int m=0; m<allShuntsuCombinationsIndexes.size(); m++)
+            {
+              if(l==allShuntsuCombinationsIndexes.get(m))
+              {
+                isTileAvailable=false;
+              }
+            }
+            if(isTileAvailable)
+            {
+              allHaisWithoutChosenShuntsuCombinations.add(rootNode[i].children.get(j).children.get(k).haiCollection.get(l));
+              //System.out.println("this hai was added to the all hais without kootsu combo list"+rootNode[i].children.get(j).haiCollection.get(l));
+            }
+          }
+          rootNode[i].children.get(j).children.get(k).addChild(new RiipaiPatternsTreeNode(allHaisWithoutChosenShuntsuCombinations));
+          rootNode[i].children.get(j).children.get(k).addChild(new RiipaiPatternsTreeNode(splitHais.get(i))); //add a branch in shuntsu level/third level of the tree for a pattern where there's no shuntsu
         }
-
-
-
       }
-
-
     }
 
     //print out the level1 (the atama level) of tree
 
-    for(int x=0; x<rootNode.length; x++)
+    for(int x=0; x<rootNode.length; x++) //type loop
     {
-      //System.out.println("type: "+x);
-      for(int i=0; i<rootNode[x].children.size(); i++)
+      System.out.println("type: "+x);
+      System.out.println("");
+      System.out.println("");
+      for(int i=0; i<rootNode[x].children.size(); i++) //level 1 loop
       {
-        for(int k=0; k<rootNode[x].children.get(i).haiCollection.size(); k++)
+        System.out.println("");
+        System.out.println("level1");
+        System.out.println("minus atama: "+rootNode[x].children.get(i).haiCollection);
+        for(int j=0; j<rootNode[x].children.get(i).children.size(); j++) //level 2 loop
         {
-          //System.out.println("no atama: "+rootNode[x].children.get(i).haiCollection.get(k));
-        }
-        for(int j=0; j<rootNode[x].children.get(i).children.size(); j++)
-        {
-          for(int k=0; k<rootNode[x].children.get(i).children.get(j).haiCollection.size(); k++)
+          System.out.println("");
+          System.out.println("level2");
+          System.out.println("minus kootsu: "+rootNode[x].children.get(i).children.get(j).haiCollection);
+          for(int k=0; k<rootNode[x].children.get(i).children.get(j).children.size(); k++) //level 2 loop
           {
-            //System.out.println("no kootsu nor atama: "+rootNode[x].children.get(i).children.get(j).haiCollection.get(k));
+            System.out.println("");
+            System.out.println("level3");
+            System.out.println("minus shuntsu: "+rootNode[x].children.get(i).children.get(j).children.get(k).haiCollection);
           }
-
-          //System.out.println("level2 next branch------------------");
         }
-        //System.out.println("level1 next branch------------------");
       }
     }
 
