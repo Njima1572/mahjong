@@ -6,12 +6,16 @@ public class Table{
   public Stack<Hai> mountain; //mountain should be stack so we can just use a destructive .pop() to tsumo a Hai
   public Stack<Hai> wanpai;
   private Player[] players;
+  public int turn;
   public Hai doraHyouji;
   public Hai justDiscarded;
+  public Hai dora;
+
 
   public Table(Player[] p){
     players = p;
     tiles = new ArrayList<Hai>();
+    turn = 0;
   }
 
   /**
@@ -62,7 +66,18 @@ public class Table{
       players[0].tehai[13] = desired2;
     }
     doraHyouji = dora(wanpai);
-    System.out.println(doraHyouji);
+    if(doraHyouji.getNumber() == 9){
+      dora = new Hai(1, doraHyouji.getType());
+    }else if(doraHyouji.getType() == "kaze"){
+      dora = new Hai((doraHyouji.getNumber() + 1) % 4, doraHyouji.getType());
+    }else if(doraHyouji.getType() == "sangen"){
+      dora = new Hai((doraHyouji.getNumber() + 1) % 3, doraHyouji.getType());
+    }else{
+      dora = new Hai(doraHyouji.getNumber() + 1, doraHyouji.getType());
+    }
+
+    System.out.println("The dora hyouji is: " + doraHyouji + ", dora is: " + dora);
+    System.out.println("----------------------------------");
 
   }
 

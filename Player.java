@@ -5,9 +5,13 @@ public class Player{
   Table t;
   Hai[] sutehai = new Hai[30];
   int shanten;
+  boolean turnCheck;
+  int point;
+
   public Player(Table table)
   {
     t=table;
+    point = 25000; //can be flexible later.
   }
   public void tsumo()
   {
@@ -91,68 +95,35 @@ public class Player{
       tehaiIndexCount=tehaiIndexCount+splitTehai.get(i).size();
     }
 
-    shanten = shantenCheck(splitTehai);
-
   } //riipai()
 
   public int getShanten(){
     return shanten;
   }
 
-  public int shantenCheck(ArrayList<ArrayList<Hai>> splitTehai){
-    int atama = 0;
-    int kootsu = 0;
-    int taatsu = 0;
-    int shuntsu = 0;
-    int sum;
-    for(int i = 0; i < 5; i++){
-      for(int j = 0; j < splitTehai.get(i).size() - 1; j++){
-        if(splitTehai.get(i).size() > 2 && splitTehai.get(i).get(j).getNumber() == splitTehai.get(i).get(j + 1).getNumber()){
-          if(splitTehai.get(i).get(j).getNumber() == splitTehai.get(i).get(j + 2).getNumber()){
-            splitTehai.get(i).remove(j);
-            splitTehai.get(i).remove(j + 1);
-            splitTehai.get(i).remove(j + 2);
-            kootsu += 1;
-            j += 2;
-            System.out.println("Kotsu found!");
-            break;
-          }
-          splitTehai.get(i).remove(j);
-          splitTehai.get(i).remove(j + 1);
-          j += 1;
-          if(atama < 1){
-            System.out.println("Atama found!");
-            atama += 1;
-          }else{
-            System.out.println("Tatsu found!");
 
-            taatsu += 1;
-          }
-        }else if(i < 3 && splitTehai.get(i).size() > 2 && splitTehai.get(i).get(j).getNumber() + 1 == splitTehai.get(i).get(j + 1).getNumber()){
-          if(splitTehai.get(i).size() > 2 && splitTehai.get(i).get(j).getNumber() + 2 == splitTehai.get(i).get(j + 2).getNumber()){
-            splitTehai.get(i).remove(j);
-            splitTehai.get(i).remove(j + 1);
-            splitTehai.get(i).remove(j + 2);
-            System.out.println("Shuntsu found!");
 
-            shuntsu += 1;
-            j += 2;
-          }
-        }else if(i < 3 && splitTehai.get(i).size() > 1 && splitTehai.get(i).get(j).getNumber() + 2 == splitTehai.get(i).get(j + 1).getNumber()){
-          splitTehai.get(i).remove(j);
-          splitTehai.get(i).remove(j + 1);
-          System.out.println("Tatsu found!");
-
-          taatsu += 1;
-        }
-      }
-    }
-    sum = 8 - (atama + kootsu * 2 + taatsu + shuntsu * 2);
-    return sum;
+  public void turnMove(boolean turnCheck){
+    tsumo();
+    kanCheck(t.justDiscarded);
+    dahai();
+    t.turn ++;
   }
 
-  public void naki()
-  {
+  public void naki(Hai justDiscarded){
+
+    if(chiCheck(justDiscarded)){
+      //Give an option for Chi
+    }
+    if(ponCheck(justDiscarded)){
+      //Give an option for Pon
+    }
+    if(kanCheck(justDiscarded)){
+      //Give an option for kan
+    }
+    // if(ronCheck(justDiscarded)){
+    //   //Give an option for Ron
+    // }
 
   }
   public boolean ponCheck(Hai justDiscarded){
@@ -168,19 +139,40 @@ public class Player{
 
   public boolean chiCheck(Hai justDiscarded){
     boolean discardedIsBigger;
-    for(int i = 0; i < tehai.length - 1; i++){
-      if(tehai[i])
-      discardedIsBigger = isH1Bigger(justDiscarded, tehai[i]);
-      if(!discardedIsBigger){
-        if(tehai[i].getNumber() - justDiscarded.getNumber() == 1){
-
+    boolean isDiscardedFromAPersonBefore;
+    boolean isJihai;
+    isJihai = (justDiscarded.getType() == "kaze" || justDiscarded.getType() == "sangen");
+    if(!isJihai){
+      for(int i = 0; i < tehai.length - 1; i++){
+        if(tehai[i].getType() == justDiscarded.getType()){
+          discardedIsBigger = isH1Bigger(justDiscarded, tehai[i]);
+          if(!discardedIsBigger){
+            if(tehai[i].getNumber() - justDiscarded.getNumber() == 1){
+              for(int j = i + 1; j < tehai.length; j++){
+                if(tehai[i] != tehai[j]){
+                  if(tehai[i].getNumber() + 1 == tehai[j].getNumber()){
+                    return true;
+                  }
+                }
+              }
+            }
+          }else{
+            if(justDiscarded.getNumber() - tehai[i].getNumber() == 1){
+              for(int j = i + 1; j < tehai.length; j++){
+                if(tehai[j] != tehai[i]){
+                  if(tehai[i].getNumber() + 2 == tehai[j].getNumber()){
+                    return true;
+                  }
+                }
+              }
+            }
+          }
         }
-
-
       }
     }
-
+    return false;
   }
+
   public boolean kanCheck(Hai justDiscarded){
     for(int i = 0; i < tehai.length - 1; i++){
       if(tehai[i] == justDiscarded){
@@ -194,11 +186,11 @@ public class Player{
     return false;
   }
 
-  public boolean ronCheck(Hai justDiscarded){
-    if(checkTenpai){// need a boolean value checkTenpai
-
-    }
-  }
+  // public boolean ronCheck(Hai justDiscarded){
+  //   if(checkTenpai){// need a boolean value checkTenpai
+  //
+  //   }
+  // }
 
   public boolean isH1Bigger(Hai h1, Hai h2){
     return (h1.getNumber() > h2.getNumber());

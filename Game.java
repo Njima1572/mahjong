@@ -1,6 +1,7 @@
 public class Game{
 	public int ID;
 	public Table table;
+	private boolean gameIsGoing;
 	public Player[] players = new Player[4];
 	public Game(int id)
 	{
@@ -9,7 +10,7 @@ public class Game{
 			players[i] = new Player(table);
 		}
 		table = new Table(players);
-		table.init();
+		table.init(false);
 	}
 
 	public void visualize()
@@ -33,5 +34,8 @@ public class Game{
 		}
 		System.out.println(game.players[0].getShanten());
 
+		while(game.gameIsGoing){
+			game.players[game.table.turn].turnMove(true);
+		}
 	}
 }
