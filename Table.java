@@ -59,7 +59,7 @@ public class Table{
       for(int i = 0; i < 4; i++){
         for(int j = 0; j < 3; j++){
           Hai desired = new Hai(i, "manzu");
-          players[0].tehai[i * 4 + j] = desired;
+          players[0].tehai[i * 3 + j] = desired;
         }
       }
       Hai desired2 = new Hai(5, "manzu");

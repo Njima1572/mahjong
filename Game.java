@@ -34,6 +34,11 @@ public class Game{
 		}
 		System.out.println(game.players[0].getShanten());
 
+		game.table.justDiscarded = new Hai(2, "sangen");
+
+		System.out.println("Can chi?: " + (game.players[0].chiCheck(game.table.justDiscarded)));
+		System.out.println("Can pon?: " + (game.players[0].ponCheck(game.table.justDiscarded)));
+		System.out.println("Can kan?: " + (game.players[0].kanCheck(game.table.justDiscarded)));
 		while(game.gameIsGoing){
 			game.players[game.table.turn].turnMove(true);
 		}

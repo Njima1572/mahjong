@@ -20,7 +20,7 @@ public class Player{
   }
   private void dahai()
   {
-    Scanner s = new Scanner(System.in);
+    Scanner s = new Scanner(System.in);//Input should be index number of tehai
     for(int i = 0; i < sutehai.length; i++)
     {
       if(sutehai[i] == null)
@@ -127,9 +127,9 @@ public class Player{
 
   }
   public boolean ponCheck(Hai justDiscarded){
-    for(int i = 0; i < tehai.length - 1; i++){
-      if(tehai[i] == justDiscarded){
-        if(tehai[i] == tehai[i + 1]){
+    for(int i = 0; i < tehai.length - 2; i++){
+      if(tehai[i].getType().equals(justDiscarded.getType()) && tehai[i].getNumber() == justDiscarded.getNumber()){
+        if(tehai[i + 1].getType().equals(justDiscarded.getType()) && tehai[i + 1].getNumber() == justDiscarded.getNumber()){
           return true;
         }
       }
@@ -144,23 +144,35 @@ public class Player{
     isJihai = (justDiscarded.getType() == "kaze" || justDiscarded.getType() == "sangen");
     if(!isJihai){
       for(int i = 0; i < tehai.length - 1; i++){
-        if(tehai[i].getType() == justDiscarded.getType()){
+        if(tehai[i].getType().equals(justDiscarded.getType())){
           discardedIsBigger = isH1Bigger(justDiscarded, tehai[i]);
-          if(!discardedIsBigger){
-            if(tehai[i].getNumber() - justDiscarded.getNumber() == 1){
-              for(int j = i + 1; j < tehai.length; j++){
-                if(tehai[i] != tehai[j]){
-                  if(tehai[i].getNumber() + 1 == tehai[j].getNumber()){
+          if(!discardedIsBigger){                                      //if discarded is smaller 4 was discarded checking 5
+            if(tehai[i].getNumber() - justDiscarded.getNumber() == 1){ //check if any tile is 1 value bigger.
+              for(int j = i + 1; j < tehai.length - 1; j++){
+                if(tehai[i].getType().equals(tehai[j].getType()) && tehai[i].getNumber() != tehai[j].getNumber()){ //if any tile is having same type but different value
+                  if(tehai[i].getNumber() + 1 == tehai[j].getNumber()){ //check if there is any tile that is one value bigger than i eg. 56 - 4
+                    return true;
+                  }
+                  if(tehai[i].getNumber() - 2 == tehai[j].getNumber()){//check if there is any tile that is two value smaller than i eg. 35 - 4
                     return true;
                   }
                 }
               }
             }
           }else{
-            if(justDiscarded.getNumber() - tehai[i].getNumber() == 1){
-              for(int j = i + 1; j < tehai.length; j++){
-                if(tehai[j] != tehai[i]){
-                  if(tehai[i].getNumber() + 2 == tehai[j].getNumber()){
+            if(justDiscarded.getNumber() - tehai[i].getNumber() == 1){ //if there is any tile that is a value smaller than discarded.
+              for(int j = i + 1; j < tehai.length - 1; j++){
+                if(tehai[j].getType().equals(tehai[i].getType()) && tehai[j].getNumber() != tehai[i].getNumber()){ //checking with same type but different value.
+                  if(justDiscarded.getNumber() + 1 == tehai[j].getNumber()){ //if there is any that is two values smaller than discarded. eg. 23 - 4
+                    return true;
+                  }
+                }
+              }
+            }
+            if(justDiscarded.getNumber() - tehai[i].getNumber() == 2){ //if there is any tile that is two values smaller than just discarded;
+              for(int j = 1; j < tehai.length - 1; j++){
+                if(tehai[i].getType().equals(tehai[j].getType()) && tehai[i].getNumber() != tehai[j].getNumber()){// checking with same type but different value.
+                  if(justDiscarded.getNumber() - 1 == tehai[j].getNumber()){ //if there is any that is a value smaller than discarded. eg. 23 - 4  seems like its same as the one before.
                     return true;
                   }
                 }
@@ -174,10 +186,10 @@ public class Player{
   }
 
   public boolean kanCheck(Hai justDiscarded){
-    for(int i = 0; i < tehai.length - 1; i++){
-      if(tehai[i] == justDiscarded){
-        if(tehai[i] == tehai[i + 1]){
-          if(tehai[i] == tehai[i + 2]){
+    for(int i = 0; i < tehai.length - 3; i++){
+      if(tehai[i].getType().equals(justDiscarded.getType()) && tehai[i].getNumber() == justDiscarded.getNumber()){
+        if(tehai[i + 1].getType().equals(justDiscarded.getType()) && tehai[i + 1].getNumber() == justDiscarded.getNumber()){
+          if(tehai[i + 2].getType().equals(justDiscarded.getType()) && tehai[i + 2].getNumber() == justDiscarded.getNumber()){
             return true;
           }
         }
@@ -191,6 +203,42 @@ public class Player{
   //
   //   }
   // }
+
+  // public void chiAction(){
+  //   if(chiCheck(t.justDiscarded)){
+  //     for(int i = 0; i < tehai.length; i++){
+  //       if(t.justDiscarded.getNumber() - tehai[i])
+  //     }
+  //     dahai();
+  //   }
+  // }
+
+  public void ponAction(){
+    if(ponCheck(t.justDiscarded)){
+      Scanner s = new Scanner(System.in);
+      String scanned = s.nextLine();
+      int counter = 0;
+      int i = 0;
+      if(scanned == "y"){
+        while(counter < 2){
+          if(t.justDiscarded.equals(tehai[i])){
+            tehai[i].nakiDone();
+            counter++;
+          }
+          i++;
+        }
+        t.justDiscarded.nakiDone();
+        dahai();
+      }else{
+        return;
+      }
+    }
+  }
+
+  public void kanAction(){
+
+  }
+
 
   public boolean isH1Bigger(Hai h1, Hai h2){
     return (h1.getNumber() > h2.getNumber());
