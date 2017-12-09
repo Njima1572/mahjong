@@ -42,20 +42,20 @@ public class Player{
       switch(tehai[i].getType())
       {
         case "souzu":
-          splitTehai.get(0).add(tehai[i]);
-          break;
+        splitTehai.get(0).add(tehai[i]);
+        break;
         case "manzu":
-          splitTehai.get(1).add(tehai[i]);
-          break;
+        splitTehai.get(1).add(tehai[i]);
+        break;
         case "pinzu":
-          splitTehai.get(2).add(tehai[i]);
-          break;
+        splitTehai.get(2).add(tehai[i]);
+        break;
         case "kaze":
-          splitTehai.get(3).add(tehai[i]);
-          break;
+        splitTehai.get(3).add(tehai[i]);
+        break;
         case "sangen":
-          splitTehai.get(4).add(tehai[i]);
-          break;
+        splitTehai.get(4).add(tehai[i]);
+        break;
       }
     }
 
@@ -99,6 +99,7 @@ public class Player{
   public void minShantensuu(ArrayList<ArrayList<Hai>> splitHais)
   {
     RiipaiPatternsTreeNode[] rootNode = new RiipaiPatternsTreeNode[splitHais.size()];
+
     //we will loop through each types of tiles in splitHais and add up each InverseShantensuu (shantensuu = 8-InverseShantensuu)
     for(int i=0; i<splitHais.size(); i++)
     {
@@ -212,82 +213,115 @@ public class Player{
         {
           if(rootNode[i].children.get(j).children.get(k)!=null)
           {
-            rootNode[i].children.get(j).children.get(k).InverseShantensuu+=2; //add 1 to InverseShantensuu to this TreeNode because it has an atama
+            rootNode[i].children.get(j).children.get(k).InverseShantensuu+=2; //add 2 to InverseShantensuu to this TreeNode because it has a kootsu
             rootNode[i].children.get(j).children.get(k).numberOfKootsu=allKootsuCombinationsIndexes.size()/3;
           }
 
-          boolean isHaiPartOfShuntsu=false;
-          int shuntsuCheckLoopCounter=1;
-          ArrayList<ArrayList<Integer>> listOfPossibleShuntsuIndexes = new ArrayList<ArrayList<Integer>>();
-          //System.out.println("j: "+j+"size: "+(rootNode[i].children.get(j).haiCollection.size()-1));
-          while(shuntsuCheckLoopCounter<rootNode[i].children.get(j).children.get(k).haiCollection.size()-1)
+          //jihais shouldn't be shuntsu so
+          if(i!=4 && i!=3)
           {
-            isHaiPartOfShuntsu=false;
-            //if the hai now is +1 of before and -1 of next its a shuntsu so
-            if(rootNode[i].children.get(j).children.get(k).haiCollection.get(shuntsuCheckLoopCounter).getNumber()==rootNode[i].children.get(j).children.get(k).haiCollection.get(shuntsuCheckLoopCounter-1).getNumber()+1)
+            //listing all possible shuntsus from the available hais
+            ArrayList<ArrayList<Integer>> haiNumberAndIndex = new ArrayList<ArrayList<Integer>>(); //[n][0] is how many hais with n+1 number exists and [n][N] is what the hai indexes are
+            for(int nine=0; nine<9; nine++)
             {
-              if(rootNode[i].children.get(j).children.get(k).haiCollection.get(shuntsuCheckLoopCounter).getNumber()==rootNode[i].children.get(j).children.get(k).haiCollection.get(shuntsuCheckLoopCounter+1).getNumber()-1)
-              {
-                ArrayList<Integer> shuntsuIndexes = new ArrayList<Integer>();
-                shuntsuIndexes.add(shuntsuCheckLoopCounter-1);
-                shuntsuIndexes.add(shuntsuCheckLoopCounter);
-                shuntsuIndexes.add(shuntsuCheckLoopCounter+1);
-                listOfPossibleShuntsuIndexes.add(shuntsuIndexes);
-                //System.out.println("this kootsu indexes got added to list of PossibleKootsuIndexes: ");
-                //System.out.println(kootsuIndexes);
-                isHaiPartOfShuntsu=true;
-              }
+              ArrayList<Integer> temp = new ArrayList<Integer>();
+              temp.add(0);
+              haiNumberAndIndex.add(temp);
             }
-            if(isHaiPartOfShuntsu)
+            ArrayList<ArrayList<Integer>> listOfPossibleShuntsuIndexes = new ArrayList<ArrayList<Integer>>();
+            for(int x=0; x<rootNode[i].children.get(j).children.get(k).haiCollection.size(); x++)
             {
-              //System.out.println("plus 3");
-              shuntsuCheckLoopCounter=shuntsuCheckLoopCounter+3; //add 3 to the counter to move onto the next kootsu
+              int numberOfHais = haiNumberAndIndex.get(rootNode[i].children.get(j).children.get(k).haiCollection.get(x).getNumber()-1).get(0);
+              haiNumberAndIndex.get(rootNode[i].children.get(j).children.get(k).haiCollection.get(x).getNumber()-1).set(0,numberOfHais+1); //up the count for the hai number
+              haiNumberAndIndex.get(rootNode[i].children.get(j).children.get(k).haiCollection.get(x).getNumber()-1).get(0).add(x); //store the index of the hai recorded
             }
-            else
+            boolean isHaiPartOfShuntsu=false;
+            int shuntsuCheckLoopCounter=1;
+            while(shuntsuCheckLoopCounter<9-1) //loop through 9 numbers minus one (so the last loop+1 can be checked)
             {
-              //System.out.println("just plus 1");
-              shuntsuCheckLoopCounter++; //only add 1 because this hai wasn't part of a kootsu but the next one might be
-            }
-          }
+              //System.out.println("type: "+i+" curr idx-1: "+rootNode[i].children.get(j).children.get(k).haiCollection.get(shuntsuCheckLoopCounter-1).getNumber()+" curr idx: "+rootNode[i].children.get(j).children.get(k).haiCollection.get(shuntsuCheckLoopCounter).getNumber()+" curr idx+1: "+rootNode[i].children.get(j).children.get(k).haiCollection.get(shuntsuCheckLoopCounter+1).getNumber());
+              isHaiPartOfShuntsu=false;
 
-          ArrayList<Integer> allShuntsuCombinationsIndexes = new ArrayList<Integer>();
-          for(int n=0; n<listOfPossibleShuntsuIndexes.size(); n++)
-          {
-            for(int x=n; x<listOfPossibleShuntsuIndexes.size(); x++)
-            {
-
-              for(int l=n; l<=x; l++)
+              //if the hai now is +1 of before and -1 of next its a shuntsu so
+              if(haiNumberAndIndex.get(shuntsuCheckLoopCounter-1).get(0)>0 && haiNumberAndIndex.get(shuntsuCheckLoopCounter).get(0)>0)
               {
-                for(int m=0; m<listOfPossibleShuntsuIndexes.get(l).size(); m++)
+                if(haiNumberAndIndex.get(shuntsuCheckLoopCounter+1).get(0)>0 && haiNumberAndIndex.get(shuntsuCheckLoopCounter).get(0)>0)
                 {
-                  allShuntsuCombinationsIndexes.add(listOfPossibleShuntsuIndexes.get(l).get(m));
+                  int minHaiNumber=9;
+                  for(int minLoop=-1; minLoop<2; minLoop++)
+                  {
+                    if(haiNumberAndIndex.get(shuntsuCheckLoopCounter+minLoop).get(0)<minHaiNumber)
+                    {
+                      minHaiNumber=haiNumberAndIndex.get(shuntsuCheckLoopCounter+minLoop).get(0);
+                    }
+                  }
+
                 }
-                //System.out.println("this kootsu indexes got added: ");
-                //System.out.println(listOfPossibleKootsuIndexes.get(l));
-
               }
-            }
-          }
 
-          ArrayList<Hai> allHaisWithoutChosenShuntsuCombinations = new ArrayList<Hai>();
-          for(int l=0; l<rootNode[i].children.get(j).children.get(k).haiCollection.size(); l++)
-          {
-            boolean isTileAvailable=true;
-            for(int m=0; m<allShuntsuCombinationsIndexes.size(); m++)
-            {
-              if(l==allShuntsuCombinationsIndexes.get(m))
+              /*
+              ArrayList<Integer> shuntsuIndexes = new ArrayList<Integer>();
+              shuntsuIndexes.add(shuntsuCheckLoopCounter-1);
+              shuntsuIndexes.add(shuntsuCheckLoopCounter);
+              shuntsuIndexes.add(shuntsuCheckLoopCounter+1);
+              listOfPossibleShuntsuIndexes.add(shuntsuIndexes);
+              System.out.println("this shuntsu indexes got added to list of PossibleKootsuIndexes: ");
+              System.out.println(shuntsuIndexes);
+              isHaiPartOfShuntsu=true;
+              */
+
+              if(isHaiPartOfShuntsu)
               {
-                isTileAvailable=false;
+                System.out.println("plus 3");
+                shuntsuCheckLoopCounter=shuntsuCheckLoopCounter+3; //add 3 to the counter to move onto the next kootsu
+              }
+              else
+              {
+                System.out.println("just plus 1");
+                shuntsuCheckLoopCounter++; //only add 1 because this hai wasn't part of a kootsu but the next one might be
               }
             }
-            if(isTileAvailable)
+
+            ArrayList<Integer> allShuntsuCombinationsIndexes = new ArrayList<Integer>();
+            for(int n=0; n<listOfPossibleShuntsuIndexes.size(); n++)
             {
-              allHaisWithoutChosenShuntsuCombinations.add(rootNode[i].children.get(j).children.get(k).haiCollection.get(l));
-              //System.out.println("this hai was added to the all hais without kootsu combo list"+rootNode[i].children.get(j).haiCollection.get(l));
+              for(int x=n; x<listOfPossibleShuntsuIndexes.size(); x++)
+              {
+
+                for(int l=n; l<=x; l++)
+                {
+                  for(int m=0; m<listOfPossibleShuntsuIndexes.get(l).size(); m++)
+                  {
+                    allShuntsuCombinationsIndexes.add(listOfPossibleShuntsuIndexes.get(l).get(m));
+                  }
+
+                }
+              }
+            }
+
+            ArrayList<Hai> allHaisWithoutChosenShuntsuCombinations = new ArrayList<Hai>();
+            for(int l=0; l<rootNode[i].children.get(j).children.get(k).haiCollection.size(); l++)
+            {
+              boolean isTileAvailable=true;
+              for(int m=0; m<allShuntsuCombinationsIndexes.size(); m++)
+              {
+                if(l==allShuntsuCombinationsIndexes.get(m))
+                {
+                  isTileAvailable=false;
+                }
+              }
+              if(isTileAvailable)
+              {
+                allHaisWithoutChosenShuntsuCombinations.add(rootNode[i].children.get(j).children.get(k).haiCollection.get(l));
+                //System.out.println("this hai was added to the all hais without kootsu combo list"+rootNode[i].children.get(j).haiCollection.get(l));
+              }
+            }
+            rootNode[i].children.get(j).children.get(k).addChild(new RiipaiPatternsTreeNode(allHaisWithoutChosenShuntsuCombinations));
+            if(j==rootNode[i].children.size()-1 && k==rootNode[i].children.get(j).children.size()-1)
+            {
+              rootNode[i].children.get(j).children.get(k).addChild(new RiipaiPatternsTreeNode(rootNode[i].children.get(j).haiCollection)); //add a branch in shuntsu level/third level of the tree for a pattern where there's no shuntsu
             }
           }
-          rootNode[i].children.get(j).children.get(k).addChild(new RiipaiPatternsTreeNode(allHaisWithoutChosenShuntsuCombinations));
-          rootNode[i].children.get(j).children.get(k).addChild(new RiipaiPatternsTreeNode(splitHais.get(i))); //add a branch in shuntsu level/third level of the tree for a pattern where there's no shuntsu
         }
       }
     }
