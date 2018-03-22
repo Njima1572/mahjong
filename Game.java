@@ -9,7 +9,7 @@ public class Game{
 			players[i] = new Player(table);
 		}
 		table = new Table(players);
-		table.init(true);
+		table.init(false);
 	}
 
 	public void visualize()
