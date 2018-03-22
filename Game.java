@@ -19,12 +19,24 @@ public class Game{
 
 	public static void main(String[] args)
 	{
+		/*
 		Game game = new Game(1);
 		game.players[0].riipai();
 		for(int i=0; i<game.players[0].tehai.length - 1; i++)
 		{
 			System.out.println(game.players[0].tehai[i].toString());
 		}
+		System.out.println("Shantensuu is " + game.players[0].minShantensuu());
+		*/
+		System.out.println("stats:");
+		Game[] games = new Game[100000];
+		int totalShantensuu = 0;
+		for(int i=0; i<games.length; i++)
+		{
+			games[i] = new Game(i);
+			totalShantensuu += games[i].players[0].minShantensuu();
+		}
+		System.out.println("Empirical average shantensuu is: "+(float)totalShantensuu/(float)100000);
 
 	}
 }

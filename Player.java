@@ -90,22 +90,48 @@ public class Player{
     }
 
 
-    System.out.println("--------------------");
-    minShantensuu(tehai);
-    System.out.println("--------------------");
+    //System.out.println("--------------------");
+    //minShantensuu(tehai);
+    //System.out.println("--------------------");
 
   } //riipai()
 
   ArrayList<RiipaiPatternsTreeNode> endNodes = new ArrayList<RiipaiPatternsTreeNode>();
 
-  public void minShantensuu(Hai[] tehai)
+  public Integer minShantensuu()
   {
+    riipai();
     ArrayList<Hai> aTehai = new ArrayList<Hai>();
     //System.out.println(tehai[tehai.length-1].getType());
     for(int i=0; i<tehai.length-1; i++)
     {
       aTehai.add(tehai[i]);
     }
+    //chiitoitsu form
+    int chiitoiShantensuu=6;
+    int c=1;
+    while(c < aTehai.size()) //selecting atamas
+    {
+      if(aTehai.get(c).getType().equals(aTehai.get(c-1).getType()))
+      {
+        if(aTehai.get(c).getNumber()==aTehai.get(c-1).getNumber()) //if hai now and before are the same
+        {
+
+          c+=2;
+          chiitoiShantensuu--;
+        }
+        else
+        {
+          c++;
+        }
+      }
+      else
+      {
+        c++;
+      }
+    }
+
+    //standard tehai form
     RiipaiPatternsTreeNode rootNode;
     //----------------------------------------------------
     //make level 1 cases: atama selection
@@ -166,8 +192,17 @@ public class Player{
     }
 
     //return minimum shantensuu and print all end node haiCollection
-    System.out.println(maxNode.haiCollection.toString() + " Shantensuu is "+(8-maxNode.inverseShantensuu));
-    return;
+    //System.out.println(maxNode.haiCollection.toString() + " Shantensuu is "+(8-maxNode.inverseShantensuu));
+    int minS;
+    if(chiitoiShantensuu<8-maxNode.inverseShantensuu)
+    {
+      minS=chiitoiShantensuu;
+    }
+    else
+    {
+      minS = 8-maxNode.inverseShantensuu;
+    }
+    return minS;
 
   }//end of minShantensuu()
 
