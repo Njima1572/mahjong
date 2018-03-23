@@ -98,7 +98,7 @@ public class Player{
 
   ArrayList<RiipaiPatternsTreeNode> endNodes = new ArrayList<RiipaiPatternsTreeNode>();
 
-  public Integer minShantensuu()
+  public Integer getShantensuu()
   {
     riipai();
     ArrayList<Hai> aTehai = new ArrayList<Hai>();
@@ -107,6 +107,39 @@ public class Player{
     {
       aTehai.add(tehai[i]);
     }
+    //kokushi form
+    int kokushiShantensuu=13;
+    ArrayList<Hai> yaochuu = new ArrayList<Hai>();
+    boolean isFirstDuplicate=true;
+    for(int i=0; i<aTehai.size(); i++)
+    {
+      if(aTehai.get(i).getNumber()==1 || aTehai.get(i).getNumber()==9 || aTehai.get(i).getType()=="kaze" || aTehai.get(i).getType()=="sangen")
+      {
+        boolean yaochuuIsDuplicate=false;
+
+        for(int j=0; j<yaochuu.size(); j++)
+        {
+          if(aTehai.get(i).equals(yaochuu.get(j)))
+          {
+            if(isFirstDuplicate)
+            {
+              isFirstDuplicate=false;
+            }
+            else
+            {
+              yaochuuIsDuplicate=true;
+            }
+
+          }
+        }
+        if(!yaochuuIsDuplicate)
+        {
+          yaochuu.add(aTehai.get(i));
+          kokushiShantensuu--;
+        }
+      }
+    }
+
     //chiitoitsu form
     int chiitoiShantensuu=6;
     int c=1;
@@ -116,7 +149,6 @@ public class Player{
       {
         if(aTehai.get(c).getNumber()==aTehai.get(c-1).getNumber()) //if hai now and before are the same
         {
-
           c+=2;
           chiitoiShantensuu--;
         }
@@ -181,6 +213,24 @@ public class Player{
           minShantensuuHelper(rootNode.children.get(i));
         }
 
+    //algorithm produces duplicate endNodes so need to trim
+    ArrayList<RiipaiPatternsTreeNode> tempEndNodes = new ArrayList<RiipaiPatternsTreeNode>();
+    for(int i=0; i<endNodes.size(); i++)
+    {
+      boolean isNodeDuplicate=false;
+      for(int j=0; j<tempEndNodes.size(); j++)
+      {
+        if(endNodes.get(i).haiCollection.equals(tempEndNodes.get(j).haiCollection))
+        {
+          isNodeDuplicate=true;
+        }
+      }
+      if(!isNodeDuplicate)
+      {
+        tempEndNodes.add(endNodes.get(i));
+      }
+    }
+    endNodes=tempEndNodes;
     //loop through each end node and find one with the max inverseShantensuu (could be multiple)
     RiipaiPatternsTreeNode maxNode = endNodes.get(0);
     for(int i=1; i<endNodes.size(); i++)
@@ -190,25 +240,53 @@ public class Player{
         maxNode=endNodes.get(i);
       }
     }
+    ArrayList<RiipaiPatternsTreeNode> maxNodes = new ArrayList<RiipaiPatternsTreeNode>();
+    for(int i=0; i<endNodes.size(); i++)
+    {
+      if(endNodes.get(i).inverseShantensuu==maxNode.inverseShantensuu)
+      {
+        maxNodes.add(endNodes.get(i));
+      }
+    }
 
     //return minimum shantensuu and print all end node haiCollection
     //System.out.println(maxNode.haiCollection.toString() + " Shantensuu is "+(8-maxNode.inverseShantensuu));
     int minS;
-    if(chiitoiShantensuu<8-maxNode.inverseShantensuu)
+    int standardShantennsuu = 8-maxNode.inverseShantensuu;
+    minS=standardShantennsuu;
+    if(chiitoiShantensuu < minS)
     {
       minS=chiitoiShantensuu;
     }
+    if(kokushiShantensuu < minS)
+    {
+      minS=kokushiShantensuu;
+    }
+    /*
+    System.out.println("tehai: "+aTehai);
+    System.out.println("Shantensuu: "+minS);
+    if(minS==standardShantennsuu)
+    {
+      System.out.println("standard options for koritsuhai:");
+      for(int i=0; i<maxNodes.size(); i++)
+      {
+        System.out.println(maxNodes.get(i).haiCollection);
+      }
+    }
     else
     {
-      minS = 8-maxNode.inverseShantensuu;
+      System.out.println("less shatensuu for chiitoitsu");
     }
+    System.out.println("--------------------");
+    */
+
     return minS;
 
   }//end of minShantensuu()
 
   private void minShantensuuHelper(RiipaiPatternsTreeNode n)
   {
-    if(n.numberOfNonAtama==4 || !kootsuExists(n.haiCollection) && !shuntsuExists(n.haiCollection) && !staatsuExists(n.haiCollection) && !ktaatsuExists(n.haiCollection))
+    if(n.numberOfNonAtama==4 || (!kootsuExists(n.haiCollection) && !shuntsuExists(n.haiCollection) && !staatsuExists(n.haiCollection) && !s2taatsuExists(n.haiCollection) && !ktaatsuExists(n.haiCollection)))
     {
       endNodes.add(n);
       return;
@@ -270,7 +348,7 @@ public class Player{
 
       if(staatsuExists(n.haiCollection))
       {
-        for(int i=1; i<n.haiCollection.size(); i++) //select shuntsu
+        for(int i=1; i<n.haiCollection.size(); i++)
         {
           if(n.haiCollection.get(i).getType().equals(n.haiCollection.get(i-1).getType()))
           {
@@ -294,9 +372,38 @@ public class Player{
           }
         }
       }
+      if(s2taatsuExists(n.haiCollection))
+      {
+        for(int i=0; i<n.haiCollection.size()-1; i++) //kanchan type taatsu
+        {
+          if(n.haiCollection.get(i).getType().equals(n.haiCollection.get(i+1).getType()))
+          {
+            if(n.haiCollection.get(i).getNumber()==n.haiCollection.get(i+1).getNumber()-2)
+            {
+              if(!n.haiCollection.get(i).getType().equals("kaze") && !n.haiCollection.get(i).getType().equals("sangen"))
+              {
+                ArrayList<Hai> nMinusTaatsu = new ArrayList<Hai>();
+                for(int j=0; j<n.haiCollection.size(); j++)
+                {
+                  if(j!=i && j!=i+1)
+                  {
+                    nMinusTaatsu.add(n.haiCollection.get(j));
+                  }
+                }
+                RiipaiPatternsTreeNode n4 = new RiipaiPatternsTreeNode(nMinusTaatsu);
+                n4.inverseShantensuu=n.inverseShantensuu+1;
+                n4.numberOfNonAtama=n.numberOfNonAtama+1;
+                n.addChild(n4);
+                minShantensuuHelper(n4);
+                break;
+              }
+            }
+          }
+        }
+      }
       if(ktaatsuExists(n.haiCollection))
       {
-        for(int i=1; i<n.haiCollection.size(); i++) //select shuntsu
+        for(int i=1; i<n.haiCollection.size(); i++)
         {
           if(n.haiCollection.get(i).getType().equals(n.haiCollection.get(i-1).getType()))
           {
@@ -310,11 +417,11 @@ public class Player{
                   nMinusTaatsu.add(n.haiCollection.get(j));
                 }
               }
-              RiipaiPatternsTreeNode n4 = new RiipaiPatternsTreeNode(nMinusTaatsu);
-              n4.inverseShantensuu=n.inverseShantensuu+1;
-              n4.numberOfNonAtama=n.numberOfNonAtama+1;
-              n.addChild(n4);
-              minShantensuuHelper(n4);
+              RiipaiPatternsTreeNode n5 = new RiipaiPatternsTreeNode(nMinusTaatsu);
+              n5.inverseShantensuu=n.inverseShantensuu+1;
+              n5.numberOfNonAtama=n.numberOfNonAtama+1;
+              n.addChild(n5);
+              minShantensuuHelper(n5);
               break;
             }
           }
@@ -363,6 +470,23 @@ public class Player{
       if(h.get(i).getType().equals(h.get(i-1).getType()))
       {
         if(h.get(i).getNumber()==h.get(i-1).getNumber()+1)
+        {
+          if(!h.get(i).getType().equals("kaze") && !h.get(i).getType().equals("sangen"))
+          {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+  private boolean s2taatsuExists(ArrayList<Hai> h)
+  {
+    for(int i=0; i<h.size()-1; i++) //kanchan type taatsu
+    {
+      if(h.get(i).getType().equals(h.get(i+1).getType()))
+      {
+        if(h.get(i).getNumber()==h.get(i+1).getNumber()-2)
         {
           if(!h.get(i).getType().equals("kaze") && !h.get(i).getType().equals("sangen"))
           {

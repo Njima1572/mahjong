@@ -18,4 +18,12 @@ public class Hai{
     String num = Integer.toString(number);
     return num + type;
   }
+  public boolean equals(Hai h)
+  {
+    if(this.getNumber()==h.getNumber() && this.getType().equals(h.getType()))
+    {
+      return true;
+    }
+    return false;
+  }
 }
