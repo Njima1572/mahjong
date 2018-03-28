@@ -29,14 +29,16 @@ public class Game{
 		System.out.println("Shantensuu is " + game.players[0].minShantensuu());
 		*/
 		System.out.println("stats:");
-		Game[] games = new Game[10000];
+		Game[] games = new Game[1000];
 		int totalShantensuu = 0;
+		int totalLoopNum = 0;
 		for(int i=0; i<games.length; i++)
 		{
 			games[i] = new Game(i);
 			totalShantensuu += games[i].players[0].getShantensuu();
+			totalLoopNum += games[i].players[0].loopNum;
 		}
-		System.out.println("Empirical average shantensuu is: "+(float)totalShantensuu/(float)10000);
-
+		System.out.println("Empirical average shantensuu is: "+(float)totalShantensuu/(float)1000);
+		System.out.println("average loop num: "+(float)totalLoopNum/(float)1000);
 	}
 }

@@ -6,7 +6,13 @@ public class RiipaiPatternsTreeNode{
     ArrayList<RiipaiPatternsTreeNode> children;
     int inverseShantensuu; //where shantensuu = 8 - InverseShantensuu
     int numberOfAtama; //should be 0 or 1
-    int numberOfNonAtama;
+    int numberOfNonAtama; //can be taatsu or mentsu
+    int numberOfKootsu;
+    int numberOfShuntsu;
+    int numberOfKanchan;
+    int numberOfPenchan;
+    int numberOfRyanmen;
+    int numberOfToitsu;
 
     public RiipaiPatternsTreeNode(ArrayList<Hai> haiCollection) {
         this.haiCollection = haiCollection;
@@ -14,6 +20,12 @@ public class RiipaiPatternsTreeNode{
         inverseShantensuu=0;
         numberOfAtama=0;
         numberOfNonAtama=0;
+        numberOfKootsu=0;
+        numberOfShuntsu=0;
+        numberOfKanchan=0;
+        numberOfPenchan=0;
+        numberOfRyanmen=0;
+        numberOfToitsu=0;
     }
 
     public void addChild(RiipaiPatternsTreeNode childNode) {
