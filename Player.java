@@ -8,10 +8,18 @@ public class Player{
   boolean turnCheck;
   int point;
 
+  Hai.Type SOUZU = Hai.Type.SOUZU;
+  Hai.Type MANZU = Hai.Type.MANZU;
+  Hai.Type PINZU = Hai.Type.PINZU;
+  Hai.Type SANGEN = Hai.Type.SANGEN;
+  Hai.Type KAZE = Hai.Type.KAZE;
+
+  final int DEFAULT_POINT = 25000;
+
   public Player(Table table)
   {
-    t=table;
-    point = 25000; //can be flexible later.
+    t = table;
+    point = DEFAULT_POINT; //can be flexible later.
   }
   public void tsumo()
   {
@@ -48,19 +56,19 @@ public class Player{
     {
       switch(tehai[i].getType())
       {
-        case "souzu":
+        case MANZU:
           splitTehai.get(0).add(tehai[i]);
           break;
-        case "manzu":
+        case PINZU:
           splitTehai.get(1).add(tehai[i]);
           break;
-        case "pinzu":
+        case SOUZU:
           splitTehai.get(2).add(tehai[i]);
           break;
-        case "kaze":
+        case KAZE:
           splitTehai.get(3).add(tehai[i]);
           break;
-        case "sangen":
+        case SANGEN:
           splitTehai.get(4).add(tehai[i]);
           break;
       }
@@ -141,7 +149,7 @@ public class Player{
     boolean discardedIsBigger;
     boolean isDiscardedFromAPersonBefore;
     boolean isJihai;
-    isJihai = (justDiscarded.getType() == "kaze" || justDiscarded.getType() == "sangen");
+    isJihai = (justDiscarded.getType() == KAZE || justDiscarded.getType() == SANGEN);
     if(!isJihai){
       for(int i = 0; i < tehai.length - 1; i++){
         if(tehai[i].getType().equals(justDiscarded.getType())){
@@ -213,27 +221,27 @@ public class Player{
   //   }
   // }
 
-  public void ponAction(){
-    if(ponCheck(t.justDiscarded)){
-      Scanner s = new Scanner(System.in);
-      String scanned = s.nextLine();
-      int counter = 0;
-      int i = 0;
-      if(scanned == "y"){
-        while(counter < 2){
-          if(t.justDiscarded.equals(tehai[i])){
-            tehai[i].nakiDone();
-            counter++;
-          }
-          i++;
-        }
-        t.justDiscarded.nakiDone();
-        dahai();
-      }else{
-        return;
-      }
-    }
-  }
+//  public void ponAction(){
+//    if(ponCheck(t.justDiscarded)){
+//      Scanner s = new Scanner(System.in);
+//      String scanned = s.nextLine();
+//      int counter = 0;
+//      int i = 0;
+//      if(scanned == "y"){
+//        while(counter < 2){
+//          if(t.justDiscarded.equals(tehai[i])){
+//            tehai[i].nakiDone();
+//            counter++;
+//          }
+//          i++;
+//        }
+//        t.justDiscarded.nakiDone();
+//        dahai();
+//      }else{
+//        return;
+//      }
+//    }
+//  }
 
   public void kanAction(){
 

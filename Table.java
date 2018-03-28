@@ -11,6 +11,12 @@ public class Table{
   public Hai justDiscarded;
   public Hai dora;
 
+  Hai.Type SOUZU = Hai.Type.SOUZU;
+  Hai.Type MANZU = Hai.Type.MANZU;
+  Hai.Type PINZU = Hai.Type.PINZU;
+  Hai.Type SANGEN = Hai.Type.SANGEN;
+  Hai.Type KAZE = Hai.Type.KAZE;
+
 
   public Table(Player[] p){
     players = p;
@@ -26,9 +32,9 @@ public class Table{
     ArrayList<Hai> tiles = new ArrayList<Hai>();
     for(int j = 0; j < 4; j++){
       for(int i = 1; i < 10; i++){
-        tiles.add(new Hai(i, "souzu"));//Souzu
-        tiles.add(new Hai(i, "manzu"));//Manzu
-        tiles.add(new Hai(i, "pinzu"));//Pinzu
+        tiles.add(new Hai(i, SOUZU));//Souzu
+        tiles.add(new Hai(i, MANZU));//Manzu
+        tiles.add(new Hai(i, PINZU));//Pinzu
       }
       /** 0 - kaze = East
         * 1 - kaze = South
@@ -40,10 +46,10 @@ public class Table{
         * 2 - sangen = Red
         */
       for(int i = 0; i < 4; i++){
-        tiles.add(new Hai(i, "kaze"));
+        tiles.add(new Hai(i, KAZE));
       }
       for(int i = 0; i < 3; i++){
-        tiles.add(new Hai(i, "sangen"));
+        tiles.add(new Hai(i, SANGEN));
       }
     }
 
@@ -58,19 +64,19 @@ public class Table{
     if(isDesiredTehai){
       for(int i = 0; i < 4; i++){
         for(int j = 0; j < 3; j++){
-          Hai desired = new Hai(i, "manzu");
+          Hai desired = new Hai(i, MANZU);
           players[0].tehai[i * 3 + j] = desired;
         }
       }
-      Hai desired2 = new Hai(5, "manzu");
+      Hai desired2 = new Hai(5, MANZU);
       players[0].tehai[13] = desired2;
     }
     doraHyouji = dora(wanpai);
     if(doraHyouji.getNumber() == 9){
       dora = new Hai(1, doraHyouji.getType());
-    }else if(doraHyouji.getType() == "kaze"){
+    }else if(doraHyouji.getType() == KAZE){
       dora = new Hai((doraHyouji.getNumber() + 1) % 4, doraHyouji.getType());
-    }else if(doraHyouji.getType() == "sangen"){
+    }else if(doraHyouji.getType() == SANGEN){
       dora = new Hai((doraHyouji.getNumber() + 1) % 3, doraHyouji.getType());
     }else{
       dora = new Hai(doraHyouji.getNumber() + 1, doraHyouji.getType());

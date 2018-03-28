@@ -3,6 +3,13 @@ public class Game{
 	public Table table;
 	private boolean gameIsGoing;
 	public Player[] players = new Player[4];
+
+	Hai.Type SOUZU = Hai.Type.SOUZU;
+	Hai.Type MANZU = Hai.Type.MANZU;
+	Hai.Type PINZU = Hai.Type.PINZU;
+	Hai.Type SANGEN = Hai.Type.SANGEN;
+	Hai.Type KAZE = Hai.Type.KAZE;
+
 	public Game(int id)
 	{
 		for(int i=0; i<4; i++)
@@ -34,7 +41,7 @@ public class Game{
 		}
 		System.out.println(game.players[0].getShanten());
 
-		game.table.justDiscarded = new Hai(2, "sangen");
+		game.table.justDiscarded = new Hai(4, game.SOUZU);
 
 		System.out.println("Can chi?: " + (game.players[0].chiCheck(game.table.justDiscarded)));
 		System.out.println("Can pon?: " + (game.players[0].ponCheck(game.table.justDiscarded)));
