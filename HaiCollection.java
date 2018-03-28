@@ -54,6 +54,7 @@ public class HaiCollection implements Comparable<HaiCollection>
     this.sort();
     return hais;
   }
+
   /**
   * Gets HaiCollection with only one specified Hai type.
   * @param t The Hai type
