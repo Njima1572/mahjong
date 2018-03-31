@@ -1,17 +1,20 @@
-import java.util.ArrayList;
-public class HaiCollection implements Comparable<HaiCollection>
+import java.util.*;
+public class HaiCollection
 {
   private ArrayList<Hai> hais;
   private ArrayList<HaiCollection> typedHaiCollections;
   public HaiCollection(ArrayList<Hai> h)
   {
     hais=h;
-    types=new ArrayList<HaiCollection>();
+    
   }
   public HaiCollection()
   {
     hais=new ArrayList<Hai>();
-    types=new ArrayList<HaiCollection>();
+  }
+  public HaiCollection(HaiCollection hc)
+  {
+	  hais=hc.getHais();
   }
 
   /**
@@ -66,32 +69,19 @@ public class HaiCollection implements Comparable<HaiCollection>
     {
       if(this.get(i).Type==t)
       {
-        type.add(this.get(i));
+    	  typedHaiCollection.add(this.get(i));
       }
     }
     return typedHaiCollection;
-  }
-  /**
-  * Compares this object with another HaiCollection
-  * @param hc The other HaiCollection this object will be compared to
-  */
-  public int compareTo(HaiCollection hc)
-  {
-    if(this.getShantensuu()<hc.getShantensuu())
-    return -1;
-    else if(this.getShantensuu()>hc.getShantensuu())
-    return 1;
-    else
-    return 0;
   }
 
   /**
   * Converts this object into a readable string.
   *
   */
-  public void toString()
+  public String toString()
   {
-    String output;
+    String output=null;
     for(int i=0; i<this.size(); i++)
     {
       if(i!=this.size()-1)
@@ -100,6 +90,15 @@ public class HaiCollection implements Comparable<HaiCollection>
         output+=this.get(i).toString();
     }
     return output;
+  }
+  
+  public boolean equals(HaiCollection other)
+  {
+	  if(other.getHais().equals(this.getHais()))
+	  {
+		  return true;
+	  }
+	  return false;
   }
 
   /**
@@ -170,7 +169,7 @@ public class HaiCollection implements Comparable<HaiCollection>
       {
         combinedhc.plus(typedhcs.get(i).sort());
       }
-      this=combinedhc;
+      this.hais=combinedhc.getHais();
       return this;
     }
   }

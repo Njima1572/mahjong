@@ -35,8 +35,8 @@ public class Game{
 		for(int i=0; i<games.length; i++)
 		{
 			games[i] = new Game(i);
-			totalShantensuu += games[i].players[0].getShantensuu();
-			totalLoopNum += games[i].players[0].loopNum;
+			//totalShantensuu += games[i].players[0].getShantensuu();
+			//totalLoopNum += games[i].players[0].loopNum;
 		}
 		System.out.println("Empirical average shantensuu is: "+(float)totalShantensuu/(float)1000);
 		System.out.println("average loop num: "+(float)totalLoopNum/(float)1000);

@@ -1,18 +1,18 @@
 import java.util.*;
 public class Player{
   public char jikaze;
-  Hai[] tehai = new Hai[14];
-  ArrayList<Hai> tehai = new ArrayList<Hai>();
+  HaiCollection tehai;
   Table t;
-  Hai[] sutehai = new Hai[30];
-  ArrayList<Hai> sutehai = new ArrayList<Hai>();
+  //Hai[] sutehai = new Hai[30];
+  HaiCollection sutehai;
   public Player(Table table)
   {
     t=table;
+    tehai=new HaiCollection();
   }
   public void tsumo()
   {
-    tehai.get(14)=t.mountain.pop();
+    tehai.set(14,t.mountain.pop());
     dahai();
   }
   private void dahai()
@@ -28,28 +28,14 @@ public class Player{
 
     tehai.set(s.nextInt(),null);
     s.close();
-    riipai();
+    tehai.sort();
   }
 
 
 
-  public Tile getDiscardSelection()
+  public Hai getDiscardSelection()
   {
-    if(tehai[tehai.length-1]==null)
-    {
-      return null;
-    }
-    else
-    {
-      calculateShantensuu();
-      //create a list of possibleHaiCollection with tehai-maxNodes.get(i).haiCollection
-      //ArrayList<ArrayList<Hai>>
-      //create a HaiCollection class
-      //split each possibleHaiCollection into mentsu, taatsu, and atama
-      //for each parts, calculate ukeire probability function and add them up (for every possibleHaiCollection)
-      //choose possibleHaiCollection with max ukeire probability function
-      //from the selected maxNode, discard in order of character to 1,9 towards the middle
-    }
+	  return null;
   }
 
   public void naki()
