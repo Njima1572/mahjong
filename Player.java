@@ -1,14 +1,14 @@
 import java.util.*;
 public class Player{
   public char jikaze;
-  HaiCollection tehai;
+  private Tehai tehai;
   Table t;
   //Hai[] sutehai = new Hai[30];
   HaiCollection sutehai;
   public Player(Table table)
   {
     t=table;
-    tehai=new HaiCollection();
+    tehai=new Tehai();
   }
   public void tsumo()
   {
@@ -29,6 +29,10 @@ public class Player{
     tehai.set(s.nextInt(),null);
     s.close();
     tehai.sort();
+  }
+  public Tehai getTehai()
+  {
+	  return tehai;
   }
 
 

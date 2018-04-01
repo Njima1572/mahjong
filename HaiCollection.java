@@ -1,7 +1,7 @@
 import java.util.*;
 public class HaiCollection
 {
-	private ArrayList<Hai> hais;
+	protected ArrayList<Hai> hais;
 	private ArrayList<HaiCollection> typedHaiCollections;
 	public HaiCollection(ArrayList<Hai> h)
 	{
@@ -42,6 +42,11 @@ public class HaiCollection
 	{
 		return hais.get(i);
 	}
+	
+	public void remove(int i)
+	{
+		hais.remove(i);
+	}
 	/**
 	 * Gets how many tiles exist in this collection
 	 */
@@ -54,7 +59,6 @@ public class HaiCollection
 	 */
 	public ArrayList<Hai> getHais()
 	{
-		this.sort();
 		return hais;
 	}
 
@@ -67,10 +71,14 @@ public class HaiCollection
 		HaiCollection typedHaiCollection=new HaiCollection();
 		for(int i=0; i<this.size(); i++)
 		{
-			if(this.get(i).getType()==t)
+			if(this.get(i)!=null)
 			{
-				typedHaiCollection.add(this.get(i));
+				if(this.get(i).getType()==t)
+				{
+					typedHaiCollection.add(this.get(i));
+				}
 			}
+
 		}
 		return typedHaiCollection;
 	}
@@ -81,7 +89,7 @@ public class HaiCollection
 	 */
 	public String toString()
 	{
-		String output=null;
+		String output="";
 		for(int i=0; i<this.size(); i++)
 		{
 			if(i!=this.size()-1)
@@ -107,29 +115,27 @@ public class HaiCollection
 	 */
 	public HaiCollection minus(HaiCollection other)
 	{
-		if(this.size()>=other.size())
+		HaiCollection temphc = new HaiCollection();
+		
+		for(int i=0; i<this.size(); i++)
 		{
-			HaiCollection temphc = new HaiCollection();
-			for(int i=0; i<this.size(); i++)
+			
+			boolean didExist=false;
+			for(int j=0; j<other.size(); j++)
 			{
-				for(int j=0; j<other.size(); j++)
+				if(this.get(i).equals(other.get(j)))
 				{
-					if(this.get(i).equals(other.get(j)))
-					{
-						break;
-					}
-					if(j==other.size()-1)
-					{
-						temphc.add(this.get(i));
-					}
+					other.remove(j);
+					didExist=true;
+					break;
 				}
 			}
-			return temphc;
+			if(!didExist)
+			{
+				temphc.add(this.get(i));
+			}
 		}
-		else
-		{
-			throw new IllegalArgumentException("Cannot subtract a larger HaiCollection from a smaller HaiCollection.");
-		}
+		return temphc;
 	}
 	/**
 	 * Adds tiles in other from this HaiCollection. Will not sort the combined HaiCollection.
@@ -156,14 +162,20 @@ public class HaiCollection
 	public HaiCollection sort()
 	{
 		ArrayList<HaiCollection> typedhcs = new ArrayList<HaiCollection>();
-		typedhcs.add(this.getTypedHaiCollection(Hai.Type.MANZU));
-		typedhcs.add(this.getTypedHaiCollection(Hai.Type.PINZU));
-		typedhcs.add(this.getTypedHaiCollection(Hai.Type.SOUZU));
-		typedhcs.add(this.getTypedHaiCollection(Hai.Type.KAZE));
-		typedhcs.add(this.getTypedHaiCollection(Hai.Type.SANGEN));
+		if(this.getTypedHaiCollection(Hai.Type.MANZU).size()>0)
+			typedhcs.add(this.getTypedHaiCollection(Hai.Type.MANZU));
+		if(this.getTypedHaiCollection(Hai.Type.PINZU).size()>0)
+			typedhcs.add(this.getTypedHaiCollection(Hai.Type.PINZU));
+		if(this.getTypedHaiCollection(Hai.Type.SOUZU).size()>0)
+			typedhcs.add(this.getTypedHaiCollection(Hai.Type.SOUZU));
+		if(this.getTypedHaiCollection(Hai.Type.KAZE).size()>0)
+			typedhcs.add(this.getTypedHaiCollection(Hai.Type.KAZE));
+		if(this.getTypedHaiCollection(Hai.Type.SANGEN).size()>0)
+			typedhcs.add(this.getTypedHaiCollection(Hai.Type.SANGEN));
 		if(typedhcs.size()==1)
 		{
 			Collections.sort(this.hais);
+
 			return this;
 		}
 		else
@@ -171,7 +183,7 @@ public class HaiCollection
 			HaiCollection combinedhc = new HaiCollection();
 			for(int i=0; i<typedhcs.size(); i++)
 			{
-				combinedhc.plus(typedhcs.get(i).sort());
+				combinedhc=combinedhc.plus(typedhcs.get(i).sort());
 			}
 			this.hais=combinedhc.getHais();
 			return this;

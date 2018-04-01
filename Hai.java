@@ -68,4 +68,13 @@ public class Hai implements Comparable<Hai> {
     String num = Integer.toString(number);
     return num + type.toString();
   }
+  
+  public boolean equals(Hai other)
+  {
+	  if(this.getType()==other.getType() && this.getNumber() == other.getNumber())
+	  {
+		  return true;
+	  }
+	  return false;
+  }
 }

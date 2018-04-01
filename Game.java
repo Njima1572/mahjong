@@ -9,6 +9,7 @@ public class Game{
 			players[i] = new Player(table);
 		}
 		table = new Table(players);
+		
 		table.init(false);
 	}
 
@@ -21,24 +22,23 @@ public class Game{
 	{
 		/*
 		Game game = new Game(1);
-		game.players[0].riipai();
-		for(int i=0; i<game.players[0].tehai.length - 1; i++)
-		{
-			System.out.println(game.players[0].tehai[i].toString());
-		}
-		System.out.println("Shantensuu is " + game.players[0].minShantensuu());
+		
+		game.players[0].getTehai().sort();
+		System.out.println(game.players[0].getTehai().toString());
+		System.out.println("Shantensuu is " + game.players[0].getTehai().getShantensuu());
 		*/
+		
+		
 		System.out.println("stats:");
-		Game[] games = new Game[1000];
+		Game[] games = new Game[10000];
 		int totalShantensuu = 0;
 		int totalLoopNum = 0;
 		for(int i=0; i<games.length; i++)
 		{
 			games[i] = new Game(i);
-			//totalShantensuu += games[i].players[0].getShantensuu();
-			//totalLoopNum += games[i].players[0].loopNum;
+			totalShantensuu += games[i].players[0].getTehai().getShantensuu();
 		}
-		System.out.println("Empirical average shantensuu is: "+(float)totalShantensuu/(float)1000);
-		System.out.println("average loop num: "+(float)totalLoopNum/(float)1000);
+		System.out.println("Empirical average shantensuu is: "+(float)totalShantensuu/(float)10000);
+		
 	}
 }
