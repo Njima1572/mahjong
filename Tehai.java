@@ -6,47 +6,105 @@ public class Tehai extends HaiCollection
 		HaiCollection remainingHais; //ArrayList of hai making an atama, kootsu, shuntsu, or taatsu
 		Node parent;
 		ArrayList<Node> children;
-		int inverseShantensuu; //where shantensuu = 8 - InverseShantensuu
-		int numberOfAtama; //should be 0 or 1
-		int numberOfNonAtama; //can be taatsu or mentsu
-		int numberOfKootsu;
-		int numberOfShuntsu;
-		int numberOfKanchan;
-		int numberOfPenchan;
-		int numberOfRyanmen;
-		int numberOfToitsu;
-
+		private int inverseShantensuu; //where shantensuu = 8 - InverseShantensuu
+		private HaiCollection atama;
+		private Kootsu kootsu;
+		private Shuntsu shuntsu;
+		private Kanchan kanchan;
+		private Penchan penchan; 
+		private Ryanmen ryanmen; 
+		private Toitsu toitsu; 
+		private int numberOfNonAtamas;
 		public Node(HaiCollection hc) {
 			this.remainingHais = hc;
 			this.children = new ArrayList<Node>();
-			inverseShantensuu=0;
-			numberOfAtama=0;
-			numberOfNonAtama=0;
-			numberOfKootsu=0;
-			numberOfShuntsu=0;
-			numberOfKanchan=0;
-			numberOfPenchan=0;
-			numberOfRyanmen=0;
-			numberOfToitsu=0;
+			atama = new HaiCollection();
+			numberOfNonAtamas=0;
 		}
-
+		public void addAtama(HaiCollection atama)
+		{
+			this.atama=atama;
+		}
+		public void addKootsu(HaiCollection kootsu)
+		{
+			this.kootsu=(Kootsu)kootsu;
+		}
+		public void addShuntsu(HaiCollection shuntsu)
+		{
+			this.shuntsu=(Shuntsu)shuntsu;
+		}
+		public void addKanchan(HaiCollection kanchan)
+		{
+			this.kanchan=(Kanchan)kanchan;
+		}
+		public void addPenchan(HaiCollection penchan)
+		{
+			this.penchan=(Penchan)penchan;
+		}
+		public void addRyanmen(HaiCollection ryanmen)
+		{
+			this.ryanmen=(Ryanmen)ryanmen;
+		}
+		public void addToitsu(HaiCollection toitsu)
+		{
+			this.toitsu=(Toitsu)toitsu;
+		}
 		public void addChild(Node childNode) {
 			childNode.parent = this;
 			this.children.add(childNode);
 		}
 		public Integer countParents()
 		{
+			numberOfNonAtamas=0;
+			inverseShantensuu=0;
 			int countParents=0;
 			Node currentNode=this;
+			numberOfNonAtamas += checkNumberOfNonAtamaForNode(currentNode);
+			inverseShantensuu+=checkInverseShantensuu(currentNode);
 			while(currentNode.parent!=null)
 			{
 				currentNode=currentNode.parent;
+				numberOfNonAtamas += checkNumberOfNonAtamaForNode(currentNode);
+				inverseShantensuu+=checkInverseShantensuu(currentNode);
 				countParents++;
 			}
 			return countParents;
 		}
-
+		private int checkNumberOfNonAtamaForNode(Node n) //should return 0 or 1
+		{
+			if(n.kootsu!=null || n.shuntsu!=null || n.kanchan!=null || n.penchan!=null || n.ryanmen!=null || n.toitsu!=null)
+				return 1;
+			return 0;
+		}
+		private int checkInverseShantensuu(Node n)//should be 0,1, or 2
+		{
+			if(n.kootsu!=null || n.shuntsu!=null)
+			{
+				return 2;
+			}
+			else if(n.kanchan!=null || n.penchan!=null || n.ryanmen!=null || n.toitsu!=null)
+			{
+				return 1;
+			}
+			return 0;
+		}
+		public int getNumberOfNonAtama()
+		{
+			countParents(); 
+			return numberOfNonAtamas;
+		}
+		public int getInverseShantensuu()
+		{
+			countParents();
+			return inverseShantensuu;
+		}
 	}
+	
+	  Hai.Type SOUZU = Hai.Type.SOUZU;
+	  Hai.Type MANZU = Hai.Type.MANZU;
+	  Hai.Type PINZU = Hai.Type.PINZU;
+	  Hai.Type SANGEN = Hai.Type.SANGEN;
+	  Hai.Type KAZE = Hai.Type.KAZE;
 	private HaiCollection hais;
 	public Tehai(HaiCollection hc)
 	{
@@ -84,7 +142,7 @@ public class Tehai extends HaiCollection
 		boolean isFirstDuplicate=true;
 		for(int i=0; i<size(); i++)
 		{
-			if(get(i).getNumber()==1 || get(i).getNumber()==9 || get(i).getType()=="kaze" || get(i).getType()=="sangen")
+			if(get(i).getNumber()==1 || get(i).getNumber()==9 || get(i).getType()==KAZE || get(i).getType()==SANGEN)
 			{
 				boolean yaochuuIsDuplicate=false;
 
@@ -161,7 +219,7 @@ public class Tehai extends HaiCollection
 						atama.add(get(i));
 						selectedAtamas.add(atama);
 						Node l1 = new Node(this.minus(atama)); //add the tehai without the atama to the first level of the tree
-						l1.inverseShantensuu=1;
+						l1.addAtama(atama);
 						rootNode.addChild(l1); //make new branch
 					}
 				}
@@ -204,7 +262,7 @@ public class Tehai extends HaiCollection
 		Node maxNode = endNodes.get(0);
 		for(int i=1; i<endNodes.size(); i++)
 		{
-			if(endNodes.get(i).inverseShantensuu>maxNode.inverseShantensuu)
+			if(endNodes.get(i).getInverseShantensuu()>maxNode.getInverseShantensuu())
 			{
 				maxNode=endNodes.get(i);
 			}
@@ -212,7 +270,7 @@ public class Tehai extends HaiCollection
 		maxNodes = new ArrayList<Node>();
 		for(int i=0; i<endNodes.size(); i++)
 		{
-			if(endNodes.get(i).inverseShantensuu==maxNode.inverseShantensuu)
+			if(endNodes.get(i).getInverseShantensuu()==maxNode.getInverseShantensuu())
 			{
 				maxNodes.add(endNodes.get(i));
 			}
@@ -221,7 +279,7 @@ public class Tehai extends HaiCollection
 		//return minimum shantensuu and print all end node haiCollection
 		//System.out.println(maxNode.haiCollection.toString() + " Shantensuu is "+(8-maxNode.inverseShantensuu));
 		int minS;
-		int standardShantennsuu = 8-maxNode.inverseShantensuu;
+		int standardShantennsuu = 8-maxNode.getInverseShantensuu();
 		minS=standardShantennsuu;
 		if(chiitoiShantensuu < minS)
 		{
@@ -231,23 +289,23 @@ public class Tehai extends HaiCollection
 		{
 			minS=kokushiShantensuu;
 		}
-		/*
-    System.out.println("tehai: "+aTehai);
-    System.out.println("Shantensuu: "+minS);
-    if(minS==standardShantennsuu)
-    {
-    System.out.println("standard options for koritsuhai:");
-    for(int i=0; i<maxNodes.size(); i++)
-    {
-    System.out.println(maxNodes.get(i).haiCollection);
-  }
-}
-else
-{
-System.out.println("less shatensuu for chiitoitsu");
-}
-System.out.println("--------------------");
-		 */
+
+		System.out.println("tehai: "+hais.toString());
+		System.out.println("Shantensuu: "+minS);
+		if(minS==standardShantennsuu)
+		{
+			System.out.println("standard options for koritsuhai:");
+			for(int i=0; i<maxNodes.size(); i++)
+			{
+				System.out.println(maxNodes.get(i).remainingHais);
+			}
+		}
+		else
+		{
+			System.out.println("less shatensuu for chiitoitsu");
+		}
+		System.out.println("--------------------");
+
 
 		return minS;
 
@@ -256,7 +314,7 @@ System.out.println("--------------------");
 	private void minShantensuuHelper(Node currentNode)
 	{
 		loopNum++;
-		if(currentNode.numberOfNonAtama==4 || (!kootsuExists(currentNode.remainingHais) && !shuntsuExists(currentNode.remainingHais) && !staatsuExists(currentNode.remainingHais) && !s2taatsuExists(currentNode.remainingHais) && !ktaatsuExists(currentNode.remainingHais)))
+		if(currentNode.getNumberOfNonAtama()==4 || (!kootsuExists(currentNode.remainingHais) && !shuntsuExists(currentNode.remainingHais) && !staatsuExists(currentNode.remainingHais) && !s2taatsuExists(currentNode.remainingHais) && !ktaatsuExists(currentNode.remainingHais)))
 		{
 			endNodes.add(currentNode);
 			return;
@@ -274,10 +332,8 @@ System.out.println("--------------------");
 						kootsu.add(currentNode.remainingHais.get(i));
 						kootsu.add(currentNode.remainingHais.get(i));
 						Node n1 =new Node(currentNode.remainingHais.minus(kootsu)); //add current node's HaiCollection minus the kootsu that was selected to this node
-						n1.inverseShantensuu=currentNode.inverseShantensuu+2;
-						n1.numberOfNonAtama=currentNode.numberOfNonAtama+1;
-						n1.numberOfKootsu=currentNode.numberOfKootsu+1;
 						currentNode.addChild(n1);
+						n1.addKootsu(kootsu);
 						minShantensuuHelper(n1);
 						break;
 					}
@@ -289,16 +345,14 @@ System.out.println("--------------------");
 				{
 					if(currentNode.remainingHais.get(i).getNumber()==currentNode.remainingHais.get(i-1).getNumber()+1 && currentNode.remainingHais.get(i).getNumber()==currentNode.remainingHais.get(i-2).getNumber()+2)
 					{
-						if(!currentNode.remainingHais.get(i).getType().equals("kaze") && !currentNode.remainingHais.get(i).getType().equals("sangen"))
+						if(currentNode.remainingHais.get(i).getType()!=KAZE && currentNode.remainingHais.get(i).getType()!=SANGEN)
 						{
 							HaiCollection shuntsu = new HaiCollection();
 							shuntsu.add(currentNode.remainingHais.get(i));
 							shuntsu.add(currentNode.remainingHais.get(i-1));
 							shuntsu.add(currentNode.remainingHais.get(i-2));
 							Node n2 = new Node(currentNode.remainingHais.minus(shuntsu));
-							n2.inverseShantensuu=currentNode.inverseShantensuu+2;
-							n2.numberOfNonAtama=currentNode.numberOfNonAtama+1;
-							n2.numberOfShuntsu=currentNode.numberOfShuntsu+1;
+							n2.addShuntsu(shuntsu);
 							currentNode.addChild(n2);
 							minShantensuuHelper(n2);
 							break;
@@ -313,21 +367,19 @@ System.out.println("--------------------");
 				{
 					if(currentNode.remainingHais.get(i).getNumber()==currentNode.remainingHais.get(i-1).getNumber()+1)
 					{
-						if(!currentNode.remainingHais.get(i).getType().equals("kaze") && !currentNode.remainingHais.get(i).getType().equals("sangen"))
+						if(currentNode.remainingHais.get(i).getType()!=KAZE && currentNode.remainingHais.get(i).getType()!=SANGEN)
 						{
 							HaiCollection taatsu = new HaiCollection();
 							taatsu.add(currentNode.remainingHais.get(i));
 							taatsu.add(currentNode.remainingHais.get(i-1));
 							Node n3 = new Node(currentNode.remainingHais.minus(taatsu));
-							n3.inverseShantensuu=currentNode.inverseShantensuu+1;
-							n3.numberOfNonAtama=currentNode.numberOfNonAtama+1;
 							if(currentNode.remainingHais.get(i).getNumber()==9 || currentNode.remainingHais.get(i-1).getNumber()==1)//then it's penchan
 							{
-								n3.numberOfPenchan=currentNode.numberOfPenchan+1;
+								n3.addPenchan(taatsu);
 							}
 							else //then it's ryanmen
 							{
-								n3.numberOfRyanmen=currentNode.numberOfRyanmen+1;
+								n3.addRyanmen(taatsu);
 							}
 							currentNode.addChild(n3);
 							minShantensuuHelper(n3);
@@ -342,15 +394,13 @@ System.out.println("--------------------");
 				{
 					if(currentNode.remainingHais.get(i).getNumber()==currentNode.remainingHais.get(i+1).getNumber()-2)
 					{
-						if(!currentNode.remainingHais.get(i).getType().equals("kaze") && !currentNode.remainingHais.get(i).getType().equals("sangen"))
+						if(currentNode.remainingHais.get(i).getType()!=KAZE && currentNode.remainingHais.get(i).getType()!=SANGEN)
 						{
 							HaiCollection taatsu = new HaiCollection();
 							taatsu.add(currentNode.remainingHais.get(i));
 							taatsu.add(currentNode.remainingHais.get(i+1));
 							Node n4 = new Node(currentNode.remainingHais.minus(taatsu));
-							n4.inverseShantensuu=currentNode.inverseShantensuu+1;
-							n4.numberOfNonAtama=currentNode.numberOfNonAtama+1;
-							n4.numberOfKanchan=currentNode.numberOfKanchan+1;
+							n4.addKanchan(taatsu);
 							currentNode.addChild(n4);
 							minShantensuuHelper(n4);
 							break;
@@ -368,9 +418,7 @@ System.out.println("--------------------");
 						taatsu.add(currentNode.remainingHais.get(i));
 						taatsu.add(currentNode.remainingHais.get(i-1));
 						Node n5 = new Node(currentNode.remainingHais.minus(taatsu));
-						n5.inverseShantensuu=currentNode.inverseShantensuu+1;
-						n5.numberOfNonAtama=currentNode.numberOfNonAtama+1;
-						n5.numberOfToitsu=currentNode.numberOfToitsu+1;
+						n5.addToitsu(taatsu);
 						currentNode.addChild(n5);
 						minShantensuuHelper(n5);
 						break;
@@ -404,7 +452,7 @@ System.out.println("--------------------");
 			{
 				if(h.get(i).getNumber()==h.get(i-1).getNumber()+1 && h.get(i).getNumber()==h.get(i-2).getNumber()+2)
 				{
-					if(!h.get(i).getType().equals("kaze") && !h.get(i).getType().equals("sangen"))
+					if(h.get(i).getType()!=KAZE && h.get(i).getType()!=SANGEN)
 					{
 						return true;
 					}
@@ -421,7 +469,7 @@ System.out.println("--------------------");
 			{
 				if(h.get(i).getNumber()==h.get(i-1).getNumber()+1)
 				{
-					if(!h.get(i).getType().equals("kaze") && !h.get(i).getType().equals("sangen"))
+					if(h.get(i).getType()!=KAZE && h.get(i).getType()!=SANGEN)
 					{
 						return true;
 					}
@@ -438,7 +486,7 @@ System.out.println("--------------------");
 			{
 				if(h.get(i).getNumber()==h.get(i+1).getNumber()-2)
 				{
-					if(!h.get(i).getType().equals("kaze") && !h.get(i).getType().equals("sangen"))
+					if(h.get(i).getType()!=KAZE && h.get(i).getType()!=SANGEN)
 					{
 						return true;
 					}

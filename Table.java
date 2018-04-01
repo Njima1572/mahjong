@@ -6,12 +6,22 @@ public class Table{
   public Stack<Hai> mountain; //mountain should be stack so we can just use a destructive .pop() to tsumo a Hai
   public Stack<Hai> wanpai;
   private Player[] players;
+  public int turn;
   public Hai doraHyouji;
   public Hai justDiscarded;
+  public Hai dora;
+
+  Hai.Type SOUZU = Hai.Type.SOUZU;
+  Hai.Type MANZU = Hai.Type.MANZU;
+  Hai.Type PINZU = Hai.Type.PINZU;
+  Hai.Type SANGEN = Hai.Type.SANGEN;
+  Hai.Type KAZE = Hai.Type.KAZE;
+
 
   public Table(Player[] p){
     players = p;
     tiles = new ArrayList<Hai>();
+    turn = 0;
   }
 
   /**
@@ -22,24 +32,23 @@ public class Table{
     ArrayList<Hai> tiles = new ArrayList<Hai>();
     for(int j = 0; j < 4; j++){
       for(int i = 1; i < 10; i++){
-        tiles.add(new Hai(i, "souzu"));//Souzu
-        tiles.add(new Hai(i, "manzu"));//Manzu
-        tiles.add(new Hai(i, "pinzu"));//Pinzu
+        tiles.add(new Hai(i, SOUZU));//Souzu
+        tiles.add(new Hai(i, MANZU));//Manzu
+        tiles.add(new Hai(i, PINZU));//Pinzu
       }
       /** 0 - kaze = East
         * 1 - kaze = South
         * 2 - kaze = West
         * 3 - kaze = North
-
         * 0 - sangen = White
         * 1 - sangen = Green
         * 2 - sangen = Red
         */
       for(int i = 0; i < 4; i++){
-        tiles.add(new Hai(i, "kaze"));
+        tiles.add(new Hai(i, KAZE));
       }
       for(int i = 0; i < 3; i++){
-        tiles.add(new Hai(i, "sangen"));
+        tiles.add(new Hai(i, SANGEN));
       }
     }
 
@@ -52,36 +61,28 @@ public class Table{
 
     deal(players, mountain);//deal to this list of players
     if(isDesiredTehai){
-      //worst case tehai
-
-
       for(int i = 0; i < 4; i++){
         for(int j = 0; j < 3; j++){
-          Hai desired = new Hai(i+1, "manzu");
-          players[0].tehai[i * 3 + j] = desired;
+          Hai desired = new Hai(i, MANZU);
+          players[0].tehai.set(i * 3 + j, desired);
         }
       }
-      Hai desired2 = new Hai(5, "manzu");
-      players[0].tehai[13] = desired2;
-
-
-      /*
-      players[0].tehai[0] = new Hai(1, "manzu");
-      players[0].tehai[1] = new Hai(1, "manzu");
-      players[0].tehai[2] = new Hai(1, "manzu");
-      players[0].tehai[3] = new Hai(3, "manzu");
-      players[0].tehai[4] = new Hai(3, "manzu");
-      players[0].tehai[5] = new Hai(3, "manzu");
-      players[0].tehai[6] = new Hai(2, "souzu");
-      players[0].tehai[7] = new Hai(2, "souzu");
-      players[0].tehai[8] = new Hai(2, "souzu");
-      players[0].tehai[9] = new Hai(2, "kaze");
-      players[0].tehai[10] = new Hai(2, "kaze");
-      players[0].tehai[11] = new Hai(0, "kaze");
-      */
+      Hai desired2 = new Hai(5, MANZU);
+      players[0].tehai.set(13, desired2);
     }
     doraHyouji = dora(wanpai);
-    //System.out.println(doraHyouji);
+    if(doraHyouji.getNumber() == 9){
+      dora = new Hai(1, doraHyouji.getType());
+    }else if(doraHyouji.getType() == KAZE){
+      dora = new Hai((doraHyouji.getNumber() + 1) % 4, doraHyouji.getType());
+    }else if(doraHyouji.getType() == SANGEN){
+      dora = new Hai((doraHyouji.getNumber() + 1) % 3, doraHyouji.getType());
+    }else{
+      dora = new Hai(doraHyouji.getNumber() + 1, doraHyouji.getType());
+    }
+
+    System.out.println("The dora hyouji is: " + doraHyouji + ", dora is: " + dora);
+    System.out.println("----------------------------------");
 
   }
 
@@ -105,7 +106,7 @@ public class Table{
   private void deal(Player[] dealplayers, Stack<Hai> mountain){
     for(int j = 0; j < 4; j++){
       for(int i = 0; i < 13; i++){
-        dealplayers[j].tehai[i] = mountain.pop();
+        dealplayers[j].tehai.set(i, mountain.pop());
       }
     }
   }
