@@ -40,7 +40,6 @@ public class Table{
         * 1 - kaze = South
         * 2 - kaze = West
         * 3 - kaze = North
-
         * 0 - sangen = White
         * 1 - sangen = Green
         * 2 - sangen = Red
@@ -65,11 +64,11 @@ public class Table{
       for(int i = 0; i < 4; i++){
         for(int j = 0; j < 3; j++){
           Hai desired = new Hai(i, MANZU);
-          players[0].tehai[i * 3 + j] = desired;
+          players[0].getTehai().set(i * 3 + j, desired);
         }
       }
       Hai desired2 = new Hai(5, MANZU);
-      players[0].tehai[13] = desired2;
+      players[0].getTehai().set(13, desired2);
     }
     doraHyouji = dora(wanpai);
     if(doraHyouji.getNumber() == 9){
@@ -82,8 +81,8 @@ public class Table{
       dora = new Hai(doraHyouji.getNumber() + 1, doraHyouji.getType());
     }
 
-    System.out.println("The dora hyouji is: " + doraHyouji + ", dora is: " + dora);
-    System.out.println("----------------------------------");
+    //System.out.println("The dora hyouji is: " + doraHyouji + ", dora is: " + dora);
+    //System.out.println("----------------------------------");
 
   }
 
@@ -107,7 +106,7 @@ public class Table{
   private void deal(Player[] dealplayers, Stack<Hai> mountain){
     for(int j = 0; j < 4; j++){
       for(int i = 0; i < 13; i++){
-        dealplayers[j].tehai[i] = mountain.pop();
+        dealplayers[j].getTehai().set(i, mountain.pop());
       }
     }
   }

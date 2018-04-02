@@ -20,7 +20,6 @@ public class Hai implements Comparable<Hai> {
 
   private int number;
   private Type type;
-  private boolean is_naki;
 
 
   /**
@@ -31,21 +30,6 @@ public class Hai implements Comparable<Hai> {
   public Hai(int _number, Type _type){
     number = _number;
     type = _type;
-    is_naki = false;
-  }
-
-  /**
-   * getter for Naki;
-   * @return checks if hai was called or not
-   */
-  public boolean isNaki(){
-    return is_naki;
-  }
-  /**
-   * sets is_naki to true;
-   */
-  public void nakiDone(){
-    is_naki = true;
   }
 
 
@@ -83,5 +67,14 @@ public class Hai implements Comparable<Hai> {
   public String toString(){
     String num = Integer.toString(number);
     return num + type.toString();
+  }
+  
+  public boolean equals(Hai other)
+  {
+	  if(this.getType()==other.getType() && this.getNumber() == other.getNumber())
+	  {
+		  return true;
+	  }
+	  return false;
   }
 }
